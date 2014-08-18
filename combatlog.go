@@ -1,12 +1,12 @@
-package core
+package sange
 
 import (
 	"reflect"
 	"strconv"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/dotabuff/sange/string_tables"
 	"github.com/dotabuff/sange/dota"
+	"github.com/dotabuff/sange/string_tables"
 )
 
 type CombatLogEntry interface {

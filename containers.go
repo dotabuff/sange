@@ -1,4 +1,4 @@
-package core
+package sange
 
 import "github.com/davecgh/go-spew/spew"
 

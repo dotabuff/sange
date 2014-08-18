@@ -1,4 +1,4 @@
-package core
+package sange
 
 import (
 	"math"
@@ -6,12 +6,12 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 
+	"github.com/dotabuff/sange/dota"
 	"github.com/dotabuff/sange/packet_entities"
 	"github.com/dotabuff/sange/parser"
 	"github.com/dotabuff/sange/send_tables"
 	"github.com/dotabuff/sange/string_tables"
 	"github.com/dotabuff/sange/utils"
-	"github.com/dotabuff/sange/dota"
 )
 
 type Parser struct {
