@@ -12,8 +12,16 @@ func init() {
 }
 
 func TestParser(t *testing.T) {
-	Convey("parses a replay", t, func() {
+	Convey("parses replay", t, func() {
 		parser := ParserFromFile("replays/test.dem")
+		So(func() { parser.Parse() }, ShouldNotPanic)
+	})
+	Convey("parses replay1", t, func() {
+		parser := ParserFromFile("replays/test1.dem")
+		So(func() { parser.Parse() }, ShouldNotPanic)
+	})
+	Convey("parses replay2", t, func() {
+		parser := ParserFromFile("replays/test2.dem")
 		So(func() { parser.Parse() }, ShouldNotPanic)
 	})
 }

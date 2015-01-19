@@ -4,15 +4,13 @@
 
 package dota
 
-import proto "github.com/golang/protobuf/proto"
-import json "encoding/json"
+import proto "code.google.com/p/goprotobuf/proto"
 import math "math"
 
-// discarding unused import google_protobuf "github.com/dotabuff/sange/dota/google/protobuf/descriptor.pb"
+// discarding unused import google_protobuf "github.com/dotabuff/sange/dota/google/protobuf"
 
-// Reference proto, json, and math imports to suppress error if they are not otherwise used.
+// Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type EBaseUserMessages int32
@@ -1064,6 +1062,9 @@ type CUserMessageColoredText struct {
 	Color            *uint32 `protobuf:"varint,1,opt,name=color" json:"color,omitempty"`
 	Text             *string `protobuf:"bytes,2,opt,name=text" json:"text,omitempty"`
 	Reset_           *bool   `protobuf:"varint,3,opt,name=reset" json:"reset,omitempty"`
+	ContextPlayerId  *int32  `protobuf:"varint,4,opt,name=context_player_id" json:"context_player_id,omitempty"`
+	ContextValue     *int32  `protobuf:"varint,5,opt,name=context_value" json:"context_value,omitempty"`
+	ContextTeamId    *int32  `protobuf:"varint,6,opt,name=context_team_id" json:"context_team_id,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
@@ -1090,6 +1091,27 @@ func (m *CUserMessageColoredText) GetReset_() bool {
 		return *m.Reset_
 	}
 	return false
+}
+
+func (m *CUserMessageColoredText) GetContextPlayerId() int32 {
+	if m != nil && m.ContextPlayerId != nil {
+		return *m.ContextPlayerId
+	}
+	return 0
+}
+
+func (m *CUserMessageColoredText) GetContextValue() int32 {
+	if m != nil && m.ContextValue != nil {
+		return *m.ContextValue
+	}
+	return 0
+}
+
+func (m *CUserMessageColoredText) GetContextTeamId() int32 {
+	if m != nil && m.ContextTeamId != nil {
+		return *m.ContextTeamId
+	}
+	return 0
 }
 
 type CUserMessageItemPickup struct {

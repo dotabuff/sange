@@ -9,6 +9,10 @@ func NewBytesReader(data []byte) *BytesReader {
 	return &BytesReader{data: data, position: 0}
 }
 
+func (br *BytesReader) ReadBool() (result bool) {
+	return br.Read(1)[0] == 1
+}
+
 func (br *BytesReader) ReadVarInt32() (result int32) {
 	var b int32 = 0x80
 	var count uint

@@ -4,15 +4,13 @@
 
 package dota
 
-import proto "github.com/golang/protobuf/proto"
-import json "encoding/json"
+import proto "code.google.com/p/goprotobuf/proto"
 import math "math"
 
-// discarding unused import google_protobuf "github.com/dotabuff/sange/dota/google/protobuf/descriptor.pb"
+// discarding unused import google_protobuf "github.com/dotabuff/sange/dota/google/protobuf"
 
-// Reference proto, json, and math imports to suppress error if they are not otherwise used.
+// Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type NET_Messages int32
@@ -300,10 +298,11 @@ func (m *CNETMsg_Disconnect) GetReason() ENetworkDisconnectionReason {
 }
 
 type CNETMsg_File struct {
-	TransferId       *uint32 `protobuf:"varint,1,opt,name=transfer_id" json:"transfer_id,omitempty"`
+	TransferId       *int32  `protobuf:"varint,1,opt,name=transfer_id" json:"transfer_id,omitempty"`
 	FileName         *string `protobuf:"bytes,2,opt,name=file_name" json:"file_name,omitempty"`
 	IsReplayDemoFile *bool   `protobuf:"varint,3,opt,name=is_replay_demo_file" json:"is_replay_demo_file,omitempty"`
-	IsFileRequested  *bool   `protobuf:"varint,4,opt,name=is_file_requested" json:"is_file_requested,omitempty"`
+	Deny             *bool   `protobuf:"varint,4,opt,name=deny" json:"deny,omitempty"`
+	IsFileRequested  *bool   `protobuf:"varint,5,opt,name=is_file_requested" json:"is_file_requested,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
@@ -311,7 +310,7 @@ func (m *CNETMsg_File) Reset()         { *m = CNETMsg_File{} }
 func (m *CNETMsg_File) String() string { return proto.CompactTextString(m) }
 func (*CNETMsg_File) ProtoMessage()    {}
 
-func (m *CNETMsg_File) GetTransferId() uint32 {
+func (m *CNETMsg_File) GetTransferId() int32 {
 	if m != nil && m.TransferId != nil {
 		return *m.TransferId
 	}
@@ -332,6 +331,13 @@ func (m *CNETMsg_File) GetIsReplayDemoFile() bool {
 	return false
 }
 
+func (m *CNETMsg_File) GetDeny() bool {
+	if m != nil && m.Deny != nil {
+		return *m.Deny
+	}
+	return false
+}
+
 func (m *CNETMsg_File) GetIsFileRequested() bool {
 	if m != nil && m.IsFileRequested != nil {
 		return *m.IsFileRequested
@@ -341,6 +347,8 @@ func (m *CNETMsg_File) GetIsFileRequested() bool {
 
 type CNETMsg_Tick struct {
 	Tick                            *uint32 `protobuf:"varint,1,opt,name=tick" json:"tick,omitempty"`
+	HostFrametime                   *uint32 `protobuf:"varint,2,opt,name=host_frametime" json:"host_frametime,omitempty"`
+	HostFrametimeStdDeviation       *uint32 `protobuf:"varint,3,opt,name=host_frametime_std_deviation" json:"host_frametime_std_deviation,omitempty"`
 	HostComputationtime             *uint32 `protobuf:"varint,4,opt,name=host_computationtime" json:"host_computationtime,omitempty"`
 	HostComputationtimeStdDeviation *uint32 `protobuf:"varint,5,opt,name=host_computationtime_std_deviation" json:"host_computationtime_std_deviation,omitempty"`
 	HostFramestarttimeStdDeviation  *uint32 `protobuf:"varint,6,opt,name=host_framestarttime_std_deviation" json:"host_framestarttime_std_deviation,omitempty"`
@@ -354,6 +362,20 @@ func (*CNETMsg_Tick) ProtoMessage()    {}
 func (m *CNETMsg_Tick) GetTick() uint32 {
 	if m != nil && m.Tick != nil {
 		return *m.Tick
+	}
+	return 0
+}
+
+func (m *CNETMsg_Tick) GetHostFrametime() uint32 {
+	if m != nil && m.HostFrametime != nil {
+		return *m.HostFrametime
+	}
+	return 0
+}
+
+func (m *CNETMsg_Tick) GetHostFrametimeStdDeviation() uint32 {
+	if m != nil && m.HostFrametimeStdDeviation != nil {
+		return *m.HostFrametimeStdDeviation
 	}
 	return 0
 }
@@ -416,6 +438,7 @@ type CNETMsg_SignonState struct {
 	SpawnCount        *uint32  `protobuf:"varint,2,opt,name=spawn_count" json:"spawn_count,omitempty"`
 	NumServerPlayers  *uint32  `protobuf:"varint,3,opt,name=num_server_players" json:"num_server_players,omitempty"`
 	PlayersNetworkids []string `protobuf:"bytes,4,rep,name=players_networkids" json:"players_networkids,omitempty"`
+	MapName           *string  `protobuf:"bytes,5,opt,name=map_name" json:"map_name,omitempty"`
 	XXX_unrecognized  []byte   `json:"-"`
 }
 
@@ -447,6 +470,221 @@ func (m *CNETMsg_SignonState) GetNumServerPlayers() uint32 {
 func (m *CNETMsg_SignonState) GetPlayersNetworkids() []string {
 	if m != nil {
 		return m.PlayersNetworkids
+	}
+	return nil
+}
+
+func (m *CNETMsg_SignonState) GetMapName() string {
+	if m != nil && m.MapName != nil {
+		return *m.MapName
+	}
+	return ""
+}
+
+type CSVCMsg_GameEvent struct {
+	EventName        *string                  `protobuf:"bytes,1,opt,name=event_name" json:"event_name,omitempty"`
+	Eventid          *int32                   `protobuf:"varint,2,opt,name=eventid" json:"eventid,omitempty"`
+	Keys             []*CSVCMsg_GameEventKeyT `protobuf:"bytes,3,rep,name=keys" json:"keys,omitempty"`
+	XXX_unrecognized []byte                   `json:"-"`
+}
+
+func (m *CSVCMsg_GameEvent) Reset()         { *m = CSVCMsg_GameEvent{} }
+func (m *CSVCMsg_GameEvent) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_GameEvent) ProtoMessage()    {}
+
+func (m *CSVCMsg_GameEvent) GetEventName() string {
+	if m != nil && m.EventName != nil {
+		return *m.EventName
+	}
+	return ""
+}
+
+func (m *CSVCMsg_GameEvent) GetEventid() int32 {
+	if m != nil && m.Eventid != nil {
+		return *m.Eventid
+	}
+	return 0
+}
+
+func (m *CSVCMsg_GameEvent) GetKeys() []*CSVCMsg_GameEventKeyT {
+	if m != nil {
+		return m.Keys
+	}
+	return nil
+}
+
+type CSVCMsg_GameEventKeyT struct {
+	Type             *int32   `protobuf:"varint,1,opt,name=type" json:"type,omitempty"`
+	ValString        *string  `protobuf:"bytes,2,opt,name=val_string" json:"val_string,omitempty"`
+	ValFloat         *float32 `protobuf:"fixed32,3,opt,name=val_float" json:"val_float,omitempty"`
+	ValLong          *int32   `protobuf:"varint,4,opt,name=val_long" json:"val_long,omitempty"`
+	ValShort         *int32   `protobuf:"varint,5,opt,name=val_short" json:"val_short,omitempty"`
+	ValByte          *int32   `protobuf:"varint,6,opt,name=val_byte" json:"val_byte,omitempty"`
+	ValBool          *bool    `protobuf:"varint,7,opt,name=val_bool" json:"val_bool,omitempty"`
+	ValUint64        *uint64  `protobuf:"varint,8,opt,name=val_uint64" json:"val_uint64,omitempty"`
+	XXX_unrecognized []byte   `json:"-"`
+}
+
+func (m *CSVCMsg_GameEventKeyT) Reset()         { *m = CSVCMsg_GameEventKeyT{} }
+func (m *CSVCMsg_GameEventKeyT) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_GameEventKeyT) ProtoMessage()    {}
+
+func (m *CSVCMsg_GameEventKeyT) GetType() int32 {
+	if m != nil && m.Type != nil {
+		return *m.Type
+	}
+	return 0
+}
+
+func (m *CSVCMsg_GameEventKeyT) GetValString() string {
+	if m != nil && m.ValString != nil {
+		return *m.ValString
+	}
+	return ""
+}
+
+func (m *CSVCMsg_GameEventKeyT) GetValFloat() float32 {
+	if m != nil && m.ValFloat != nil {
+		return *m.ValFloat
+	}
+	return 0
+}
+
+func (m *CSVCMsg_GameEventKeyT) GetValLong() int32 {
+	if m != nil && m.ValLong != nil {
+		return *m.ValLong
+	}
+	return 0
+}
+
+func (m *CSVCMsg_GameEventKeyT) GetValShort() int32 {
+	if m != nil && m.ValShort != nil {
+		return *m.ValShort
+	}
+	return 0
+}
+
+func (m *CSVCMsg_GameEventKeyT) GetValByte() int32 {
+	if m != nil && m.ValByte != nil {
+		return *m.ValByte
+	}
+	return 0
+}
+
+func (m *CSVCMsg_GameEventKeyT) GetValBool() bool {
+	if m != nil && m.ValBool != nil {
+		return *m.ValBool
+	}
+	return false
+}
+
+func (m *CSVCMsg_GameEventKeyT) GetValUint64() uint64 {
+	if m != nil && m.ValUint64 != nil {
+		return *m.ValUint64
+	}
+	return 0
+}
+
+type CSVCMsgList_GameEvents struct {
+	Events           []*CSVCMsgList_GameEventsEventT `protobuf:"bytes,1,rep,name=events" json:"events,omitempty"`
+	XXX_unrecognized []byte                          `json:"-"`
+}
+
+func (m *CSVCMsgList_GameEvents) Reset()         { *m = CSVCMsgList_GameEvents{} }
+func (m *CSVCMsgList_GameEvents) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsgList_GameEvents) ProtoMessage()    {}
+
+func (m *CSVCMsgList_GameEvents) GetEvents() []*CSVCMsgList_GameEventsEventT {
+	if m != nil {
+		return m.Events
+	}
+	return nil
+}
+
+type CSVCMsgList_GameEventsEventT struct {
+	Tick             *int32             `protobuf:"varint,1,opt,name=tick" json:"tick,omitempty"`
+	Event            *CSVCMsg_GameEvent `protobuf:"bytes,2,opt,name=event" json:"event,omitempty"`
+	XXX_unrecognized []byte             `json:"-"`
+}
+
+func (m *CSVCMsgList_GameEventsEventT) Reset()         { *m = CSVCMsgList_GameEventsEventT{} }
+func (m *CSVCMsgList_GameEventsEventT) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsgList_GameEventsEventT) ProtoMessage()    {}
+
+func (m *CSVCMsgList_GameEventsEventT) GetTick() int32 {
+	if m != nil && m.Tick != nil {
+		return *m.Tick
+	}
+	return 0
+}
+
+func (m *CSVCMsgList_GameEventsEventT) GetEvent() *CSVCMsg_GameEvent {
+	if m != nil {
+		return m.Event
+	}
+	return nil
+}
+
+type CSVCMsg_UserMessage struct {
+	MsgType          *int32 `protobuf:"varint,1,opt,name=msg_type" json:"msg_type,omitempty"`
+	MsgData          []byte `protobuf:"bytes,2,opt,name=msg_data" json:"msg_data,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CSVCMsg_UserMessage) Reset()         { *m = CSVCMsg_UserMessage{} }
+func (m *CSVCMsg_UserMessage) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_UserMessage) ProtoMessage()    {}
+
+func (m *CSVCMsg_UserMessage) GetMsgType() int32 {
+	if m != nil && m.MsgType != nil {
+		return *m.MsgType
+	}
+	return 0
+}
+
+func (m *CSVCMsg_UserMessage) GetMsgData() []byte {
+	if m != nil {
+		return m.MsgData
+	}
+	return nil
+}
+
+type CSVCMsgList_UserMessages struct {
+	Usermsgs         []*CSVCMsgList_UserMessagesUsermsgT `protobuf:"bytes,1,rep,name=usermsgs" json:"usermsgs,omitempty"`
+	XXX_unrecognized []byte                              `json:"-"`
+}
+
+func (m *CSVCMsgList_UserMessages) Reset()         { *m = CSVCMsgList_UserMessages{} }
+func (m *CSVCMsgList_UserMessages) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsgList_UserMessages) ProtoMessage()    {}
+
+func (m *CSVCMsgList_UserMessages) GetUsermsgs() []*CSVCMsgList_UserMessagesUsermsgT {
+	if m != nil {
+		return m.Usermsgs
+	}
+	return nil
+}
+
+type CSVCMsgList_UserMessagesUsermsgT struct {
+	Tick             *int32               `protobuf:"varint,1,opt,name=tick" json:"tick,omitempty"`
+	Msg              *CSVCMsg_UserMessage `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
+	XXX_unrecognized []byte               `json:"-"`
+}
+
+func (m *CSVCMsgList_UserMessagesUsermsgT) Reset()         { *m = CSVCMsgList_UserMessagesUsermsgT{} }
+func (m *CSVCMsgList_UserMessagesUsermsgT) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsgList_UserMessagesUsermsgT) ProtoMessage()    {}
+
+func (m *CSVCMsgList_UserMessagesUsermsgT) GetTick() int32 {
+	if m != nil && m.Tick != nil {
+		return *m.Tick
+	}
+	return 0
+}
+
+func (m *CSVCMsgList_UserMessagesUsermsgT) GetMsg() *CSVCMsg_UserMessage {
+	if m != nil {
+		return m.Msg
 	}
 	return nil
 }
@@ -681,214 +919,6 @@ func (m *CNETMsg_SpawnGroup_LoadCompleted) GetSpawngrouphandle() uint32 {
 		return *m.Spawngrouphandle
 	}
 	return 0
-}
-
-type CSVCMsg_GameEvent struct {
-	EventName        *string                  `protobuf:"bytes,1,opt,name=event_name" json:"event_name,omitempty"`
-	Eventid          *int32                   `protobuf:"varint,2,opt,name=eventid" json:"eventid,omitempty"`
-	Keys             []*CSVCMsg_GameEventKeyT `protobuf:"bytes,3,rep,name=keys" json:"keys,omitempty"`
-	XXX_unrecognized []byte                   `json:"-"`
-}
-
-func (m *CSVCMsg_GameEvent) Reset()         { *m = CSVCMsg_GameEvent{} }
-func (m *CSVCMsg_GameEvent) String() string { return proto.CompactTextString(m) }
-func (*CSVCMsg_GameEvent) ProtoMessage()    {}
-
-func (m *CSVCMsg_GameEvent) GetEventName() string {
-	if m != nil && m.EventName != nil {
-		return *m.EventName
-	}
-	return ""
-}
-
-func (m *CSVCMsg_GameEvent) GetEventid() int32 {
-	if m != nil && m.Eventid != nil {
-		return *m.Eventid
-	}
-	return 0
-}
-
-func (m *CSVCMsg_GameEvent) GetKeys() []*CSVCMsg_GameEventKeyT {
-	if m != nil {
-		return m.Keys
-	}
-	return nil
-}
-
-type CSVCMsg_GameEventKeyT struct {
-	Type             *int32   `protobuf:"varint,1,opt,name=type" json:"type,omitempty"`
-	ValString        *string  `protobuf:"bytes,2,opt,name=val_string" json:"val_string,omitempty"`
-	ValFloat         *float32 `protobuf:"fixed32,3,opt,name=val_float" json:"val_float,omitempty"`
-	ValLong          *int32   `protobuf:"varint,4,opt,name=val_long" json:"val_long,omitempty"`
-	ValShort         *int32   `protobuf:"varint,5,opt,name=val_short" json:"val_short,omitempty"`
-	ValByte          *int32   `protobuf:"varint,6,opt,name=val_byte" json:"val_byte,omitempty"`
-	ValBool          *bool    `protobuf:"varint,7,opt,name=val_bool" json:"val_bool,omitempty"`
-	ValUint64        *uint64  `protobuf:"varint,8,opt,name=val_uint64" json:"val_uint64,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
-}
-
-func (m *CSVCMsg_GameEventKeyT) Reset()         { *m = CSVCMsg_GameEventKeyT{} }
-func (m *CSVCMsg_GameEventKeyT) String() string { return proto.CompactTextString(m) }
-func (*CSVCMsg_GameEventKeyT) ProtoMessage()    {}
-
-func (m *CSVCMsg_GameEventKeyT) GetType() int32 {
-	if m != nil && m.Type != nil {
-		return *m.Type
-	}
-	return 0
-}
-
-func (m *CSVCMsg_GameEventKeyT) GetValString() string {
-	if m != nil && m.ValString != nil {
-		return *m.ValString
-	}
-	return ""
-}
-
-func (m *CSVCMsg_GameEventKeyT) GetValFloat() float32 {
-	if m != nil && m.ValFloat != nil {
-		return *m.ValFloat
-	}
-	return 0
-}
-
-func (m *CSVCMsg_GameEventKeyT) GetValLong() int32 {
-	if m != nil && m.ValLong != nil {
-		return *m.ValLong
-	}
-	return 0
-}
-
-func (m *CSVCMsg_GameEventKeyT) GetValShort() int32 {
-	if m != nil && m.ValShort != nil {
-		return *m.ValShort
-	}
-	return 0
-}
-
-func (m *CSVCMsg_GameEventKeyT) GetValByte() int32 {
-	if m != nil && m.ValByte != nil {
-		return *m.ValByte
-	}
-	return 0
-}
-
-func (m *CSVCMsg_GameEventKeyT) GetValBool() bool {
-	if m != nil && m.ValBool != nil {
-		return *m.ValBool
-	}
-	return false
-}
-
-func (m *CSVCMsg_GameEventKeyT) GetValUint64() uint64 {
-	if m != nil && m.ValUint64 != nil {
-		return *m.ValUint64
-	}
-	return 0
-}
-
-type CSVCMsgList_GameEvents struct {
-	Events           []*CSVCMsgList_GameEventsEventT `protobuf:"bytes,1,rep,name=events" json:"events,omitempty"`
-	XXX_unrecognized []byte                          `json:"-"`
-}
-
-func (m *CSVCMsgList_GameEvents) Reset()         { *m = CSVCMsgList_GameEvents{} }
-func (m *CSVCMsgList_GameEvents) String() string { return proto.CompactTextString(m) }
-func (*CSVCMsgList_GameEvents) ProtoMessage()    {}
-
-func (m *CSVCMsgList_GameEvents) GetEvents() []*CSVCMsgList_GameEventsEventT {
-	if m != nil {
-		return m.Events
-	}
-	return nil
-}
-
-type CSVCMsgList_GameEventsEventT struct {
-	Tick             *int32             `protobuf:"varint,1,opt,name=tick" json:"tick,omitempty"`
-	Event            *CSVCMsg_GameEvent `protobuf:"bytes,2,opt,name=event" json:"event,omitempty"`
-	XXX_unrecognized []byte             `json:"-"`
-}
-
-func (m *CSVCMsgList_GameEventsEventT) Reset()         { *m = CSVCMsgList_GameEventsEventT{} }
-func (m *CSVCMsgList_GameEventsEventT) String() string { return proto.CompactTextString(m) }
-func (*CSVCMsgList_GameEventsEventT) ProtoMessage()    {}
-
-func (m *CSVCMsgList_GameEventsEventT) GetTick() int32 {
-	if m != nil && m.Tick != nil {
-		return *m.Tick
-	}
-	return 0
-}
-
-func (m *CSVCMsgList_GameEventsEventT) GetEvent() *CSVCMsg_GameEvent {
-	if m != nil {
-		return m.Event
-	}
-	return nil
-}
-
-type CSVCMsg_UserMessage struct {
-	MsgType          *int32 `protobuf:"varint,1,opt,name=msg_type" json:"msg_type,omitempty"`
-	MsgData          []byte `protobuf:"bytes,2,opt,name=msg_data" json:"msg_data,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *CSVCMsg_UserMessage) Reset()         { *m = CSVCMsg_UserMessage{} }
-func (m *CSVCMsg_UserMessage) String() string { return proto.CompactTextString(m) }
-func (*CSVCMsg_UserMessage) ProtoMessage()    {}
-
-func (m *CSVCMsg_UserMessage) GetMsgType() int32 {
-	if m != nil && m.MsgType != nil {
-		return *m.MsgType
-	}
-	return 0
-}
-
-func (m *CSVCMsg_UserMessage) GetMsgData() []byte {
-	if m != nil {
-		return m.MsgData
-	}
-	return nil
-}
-
-type CSVCMsgList_UserMessages struct {
-	Usermsgs         []*CSVCMsgList_UserMessagesUsermsgT `protobuf:"bytes,1,rep,name=usermsgs" json:"usermsgs,omitempty"`
-	XXX_unrecognized []byte                              `json:"-"`
-}
-
-func (m *CSVCMsgList_UserMessages) Reset()         { *m = CSVCMsgList_UserMessages{} }
-func (m *CSVCMsgList_UserMessages) String() string { return proto.CompactTextString(m) }
-func (*CSVCMsgList_UserMessages) ProtoMessage()    {}
-
-func (m *CSVCMsgList_UserMessages) GetUsermsgs() []*CSVCMsgList_UserMessagesUsermsgT {
-	if m != nil {
-		return m.Usermsgs
-	}
-	return nil
-}
-
-type CSVCMsgList_UserMessagesUsermsgT struct {
-	Tick             *int32               `protobuf:"varint,1,opt,name=tick" json:"tick,omitempty"`
-	Msg              *CSVCMsg_UserMessage `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
-	XXX_unrecognized []byte               `json:"-"`
-}
-
-func (m *CSVCMsgList_UserMessagesUsermsgT) Reset()         { *m = CSVCMsgList_UserMessagesUsermsgT{} }
-func (m *CSVCMsgList_UserMessagesUsermsgT) String() string { return proto.CompactTextString(m) }
-func (*CSVCMsgList_UserMessagesUsermsgT) ProtoMessage()    {}
-
-func (m *CSVCMsgList_UserMessagesUsermsgT) GetTick() int32 {
-	if m != nil && m.Tick != nil {
-		return *m.Tick
-	}
-	return 0
-}
-
-func (m *CSVCMsgList_UserMessagesUsermsgT) GetMsg() *CSVCMsg_UserMessage {
-	if m != nil {
-		return m.Msg
-	}
-	return nil
 }
 
 type CSVCMsg_GameSessionConfiguration struct {

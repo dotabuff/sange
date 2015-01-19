@@ -4,15 +4,13 @@
 
 package dota
 
-import proto "github.com/golang/protobuf/proto"
-import json "encoding/json"
+import proto "code.google.com/p/goprotobuf/proto"
 import math "math"
 
-// discarding unused import google_protobuf "github.com/dotabuff/sange/dota/google/protobuf/descriptor.pb"
+// discarding unused import google_protobuf "github.com/dotabuff/sange/dota/google/protobuf"
 
-// Reference proto, json, and math imports to suppress error if they are not otherwise used.
+// Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type EDotaUserMessages int32
@@ -86,6 +84,8 @@ const (
 	EDotaUserMessages_DOTA_UM_TutorialMinimapPosition  EDotaUserMessages = 530
 	EDotaUserMessages_DOTA_UM_PlayerMMR                EDotaUserMessages = 531
 	EDotaUserMessages_DOTA_UM_AbilitySteal             EDotaUserMessages = 532
+	EDotaUserMessages_DOTA_UM_SpeechBubble             EDotaUserMessages = 533
+	EDotaUserMessages_DOTA_UM_CustomHeaderMessage      EDotaUserMessages = 534
 )
 
 var EDotaUserMessages_name = map[int32]string{
@@ -157,6 +157,8 @@ var EDotaUserMessages_name = map[int32]string{
 	530: "DOTA_UM_TutorialMinimapPosition",
 	531: "DOTA_UM_PlayerMMR",
 	532: "DOTA_UM_AbilitySteal",
+	533: "DOTA_UM_SpeechBubble",
+	534: "DOTA_UM_CustomHeaderMessage",
 }
 var EDotaUserMessages_value = map[string]int32{
 	"DOTA_UM_AddUnitToSelection":       464,
@@ -227,6 +229,8 @@ var EDotaUserMessages_value = map[string]int32{
 	"DOTA_UM_TutorialMinimapPosition":  530,
 	"DOTA_UM_PlayerMMR":                531,
 	"DOTA_UM_AbilitySteal":             532,
+	"DOTA_UM_SpeechBubble":             533,
+	"DOTA_UM_CustomHeaderMessage":      534,
 }
 
 func (x EDotaUserMessages) Enum() *EDotaUserMessages {
@@ -1459,6 +1463,7 @@ type CDOTAUserMsg_MinimapDebugPoint struct {
 	Color            *uint32     `protobuf:"varint,2,opt,name=color" json:"color,omitempty"`
 	Size             *int32      `protobuf:"varint,3,opt,name=size" json:"size,omitempty"`
 	Duration         *float32    `protobuf:"fixed32,4,opt,name=duration" json:"duration,omitempty"`
+	Index            *int32      `protobuf:"varint,5,opt,name=index" json:"index,omitempty"`
 	XXX_unrecognized []byte      `json:"-"`
 }
 
@@ -1490,6 +1495,13 @@ func (m *CDOTAUserMsg_MinimapDebugPoint) GetSize() int32 {
 func (m *CDOTAUserMsg_MinimapDebugPoint) GetDuration() float32 {
 	if m != nil && m.Duration != nil {
 		return *m.Duration
+	}
+	return 0
+}
+
+func (m *CDOTAUserMsg_MinimapDebugPoint) GetIndex() int32 {
+	if m != nil && m.Index != nil {
+		return *m.Index
 	}
 	return 0
 }
@@ -3819,6 +3831,62 @@ func (m *CDOTAUserMsg_AbilitySteal) GetAbilityId() uint32 {
 func (m *CDOTAUserMsg_AbilitySteal) GetAbilityLevel() uint32 {
 	if m != nil && m.AbilityLevel != nil {
 		return *m.AbilityLevel
+	}
+	return 0
+}
+
+type CDOTAUserMsg_SpeechBubble struct {
+	DestroyAll       *bool  `protobuf:"varint,1,opt,name=destroy_all" json:"destroy_all,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CDOTAUserMsg_SpeechBubble) Reset()         { *m = CDOTAUserMsg_SpeechBubble{} }
+func (m *CDOTAUserMsg_SpeechBubble) String() string { return proto.CompactTextString(m) }
+func (*CDOTAUserMsg_SpeechBubble) ProtoMessage()    {}
+
+func (m *CDOTAUserMsg_SpeechBubble) GetDestroyAll() bool {
+	if m != nil && m.DestroyAll != nil {
+		return *m.DestroyAll
+	}
+	return false
+}
+
+type CDOTAUserMsg_CustomHeaderMessage struct {
+	PlayerId         *uint32  `protobuf:"varint,1,opt,name=player_id" json:"player_id,omitempty"`
+	Duration         *float32 `protobuf:"fixed32,2,opt,name=duration" json:"duration,omitempty"`
+	Message          *string  `protobuf:"bytes,3,opt,name=message" json:"message,omitempty"`
+	Value            *int32   `protobuf:"varint,4,opt,name=value" json:"value,omitempty"`
+	XXX_unrecognized []byte   `json:"-"`
+}
+
+func (m *CDOTAUserMsg_CustomHeaderMessage) Reset()         { *m = CDOTAUserMsg_CustomHeaderMessage{} }
+func (m *CDOTAUserMsg_CustomHeaderMessage) String() string { return proto.CompactTextString(m) }
+func (*CDOTAUserMsg_CustomHeaderMessage) ProtoMessage()    {}
+
+func (m *CDOTAUserMsg_CustomHeaderMessage) GetPlayerId() uint32 {
+	if m != nil && m.PlayerId != nil {
+		return *m.PlayerId
+	}
+	return 0
+}
+
+func (m *CDOTAUserMsg_CustomHeaderMessage) GetDuration() float32 {
+	if m != nil && m.Duration != nil {
+		return *m.Duration
+	}
+	return 0
+}
+
+func (m *CDOTAUserMsg_CustomHeaderMessage) GetMessage() string {
+	if m != nil && m.Message != nil {
+		return *m.Message
+	}
+	return ""
+}
+
+func (m *CDOTAUserMsg_CustomHeaderMessage) GetValue() int32 {
+	if m != nil && m.Value != nil {
+		return *m.Value
 	}
 	return 0
 }

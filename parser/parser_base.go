@@ -3,9 +3,9 @@ package parser
 import (
 	"io/ioutil"
 
-	"github.com/golang/protobuf/proto"
 	"code.google.com/p/snappy-go/snappy"
 	"github.com/dotabuff/sange/dota"
+	"github.com/golang/protobuf/proto"
 )
 
 func SnappyUncompress(compressed []byte) []byte {
@@ -28,11 +28,6 @@ func ReadFile(path string) []byte {
 	}
 	return raw
 }
-
-const (
-	headerLength = 12
-	headerMagic  = "PBUFDEM"
-)
 
 const (
 	DEM ParserBaseEventMapType = iota

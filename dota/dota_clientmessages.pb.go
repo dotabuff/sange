@@ -4,15 +4,13 @@
 
 package dota
 
-import proto "github.com/golang/protobuf/proto"
-import json "encoding/json"
+import proto "code.google.com/p/goprotobuf/proto"
 import math "math"
 
-// discarding unused import google_protobuf "github.com/dotabuff/sange/dota/google/protobuf/descriptor.pb"
+// discarding unused import google_protobuf "github.com/dotabuff/sange/dota/google/protobuf"
 
-// Reference proto, json, and math imports to suppress error if they are not otherwise used.
+// Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = &json.SyntaxError{}
 var _ = math.Inf
 
 type EDotaClientMessages int32
@@ -44,6 +42,7 @@ const (
 	EDotaClientMessages_DOTA_CM_WillPurchaseAlert         EDotaClientMessages = 324
 	EDotaClientMessages_DOTA_CM_PlayerShowCase            EDotaClientMessages = 325
 	EDotaClientMessages_DOTA_CM_TeleportRequiresHalt      EDotaClientMessages = 326
+	EDotaClientMessages_DOTA_CM_FillEmptySlotsWithBots    EDotaClientMessages = 327
 )
 
 var EDotaClientMessages_name = map[int32]string{
@@ -73,6 +72,7 @@ var EDotaClientMessages_name = map[int32]string{
 	324: "DOTA_CM_WillPurchaseAlert",
 	325: "DOTA_CM_PlayerShowCase",
 	326: "DOTA_CM_TeleportRequiresHalt",
+	327: "DOTA_CM_FillEmptySlotsWithBots",
 }
 var EDotaClientMessages_value = map[string]int32{
 	"DOTA_CM_MapLine":                   301,
@@ -101,6 +101,7 @@ var EDotaClientMessages_value = map[string]int32{
 	"DOTA_CM_WillPurchaseAlert":         324,
 	"DOTA_CM_PlayerShowCase":            325,
 	"DOTA_CM_TeleportRequiresHalt":      326,
+	"DOTA_CM_FillEmptySlotsWithBots":    327,
 }
 
 func (x EDotaClientMessages) Enum() *EDotaClientMessages {
@@ -576,6 +577,22 @@ func (*CDOTAClientMsg_PlayerShowCase) ProtoMessage()    {}
 func (m *CDOTAClientMsg_PlayerShowCase) GetShowcase() bool {
 	if m != nil && m.Showcase != nil {
 		return *m.Showcase
+	}
+	return false
+}
+
+type CDOTAClientMsg_FillEmptySlotsWithBots struct {
+	Fillwithbots     *bool  `protobuf:"varint,1,opt,name=fillwithbots" json:"fillwithbots,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CDOTAClientMsg_FillEmptySlotsWithBots) Reset()         { *m = CDOTAClientMsg_FillEmptySlotsWithBots{} }
+func (m *CDOTAClientMsg_FillEmptySlotsWithBots) String() string { return proto.CompactTextString(m) }
+func (*CDOTAClientMsg_FillEmptySlotsWithBots) ProtoMessage()    {}
+
+func (m *CDOTAClientMsg_FillEmptySlotsWithBots) GetFillwithbots() bool {
+	if m != nil && m.Fillwithbots != nil {
+		return *m.Fillwithbots
 	}
 	return false
 }

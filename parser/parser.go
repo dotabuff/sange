@@ -2,14 +2,11 @@ package parser
 
 import (
 	"github.com/davecgh/go-spew/spew"
-	"github.com/dotabuff/sange/utils"
 	"github.com/dotabuff/sange/dota"
+	"github.com/dotabuff/sange/utils"
 )
 
-var (
-	pp = utils.PP
-	p  = spew.Dump
-)
+var pp = spew.Dump
 
 type Parser struct {
 	reader   *utils.BytesReader
@@ -21,16 +18,18 @@ func ParserFromFile(path string) *Parser {
 	return NewParser(ReadFile(path))
 }
 
+const (
+	headerLength = 12
+	headerMagic  = "PBDEMS2"
+)
+
 func NewParser(data []byte) *Parser {
 	if len(data) < headerLength {
 		panic("File too small.")
 	}
 
 	magic := ReadStringZ(data, 0)
-	switch magic {
-	case "PBUFDEM":
-	case "PBDEMS2":
-	default:
+	if magic != headerMagic {
 		panic("demofilestamp doesn't match, was: " + spew.Sdump(magic))
 	}
 
@@ -45,6 +44,7 @@ func NewParser(data []byte) *Parser {
 
 func (p *Parser) readEDemoCommands() (dota.EDemoCommands, bool) {
 	command := dota.EDemoCommands(p.reader.ReadVarInt32())
+	pp(command)
 	compressed := (command & dota.EDemoCommands_DEM_IsCompressed) == dota.EDemoCommands_DEM_IsCompressed
 	command = command & ^dota.EDemoCommands_DEM_IsCompressed
 	return command, compressed
@@ -60,10 +60,7 @@ func (p *Parser) Analyze(callback func(*ParserBaseItem)) {
 		tick := int(p.reader.ReadVarInt32())
 		length := int(p.reader.ReadVarInt32())
 		obj, err := p.AsBaseEvent(command.String())
-		if err != nil {
-			panic(err)
-			p.reader.Skip(length)
-		} else {
+		if err == nil {
 			item := &ParserItem{
 				Sequence: p.Sequence,
 				Object:   obj,
@@ -96,6 +93,8 @@ func (p *Parser) Analyze(callback func(*ParserBaseItem)) {
 			default:
 				callback(parseOne(item))
 			}
+		} else {
+			p.reader.Skip(length)
 		}
 		command, compressed = p.readEDemoCommands()
 		if command == dota.EDemoCommands_DEM_Error {
@@ -107,12 +106,15 @@ func (p *Parser) Analyze(callback func(*ParserBaseItem)) {
 func (p *Parser) AnalyzePacket(callback func(*ParserBaseItem), fromEvent dota.EDemoCommands, tick int, data []byte) {
 	reader := utils.NewBytesReader(data)
 	for reader.CanRead() {
+		newWay := reader.ReadBool() // 0 = old way; 1 = new way
+		pp("newWay:", newWay)
 		iType := int(reader.ReadVarInt32())
+		pp("iType:", iType)
 		length := int(reader.ReadVarInt32())
-		pp(reader, iType, length)
+		pp("length:", length)
 		obj, err := p.AsBaseEventNETSVC(iType)
 		if err != nil {
-			panic(err)
+			spew.Println(err)
 			reader.Skip(length)
 		} else {
 			item := &ParserItem{
@@ -143,8 +145,7 @@ func (p *Parser) AnalyzePacket(callback func(*ParserBaseItem), fromEvent dota.ED
 func parseOne(item *ParserItem) *ParserBaseItem {
 	err := ProtoUnmarshal(item.Data, item.Object)
 	if err != nil {
-		spew.Println("parseOne()")
-		spew.Dump(item)
+		spew.Println("parseOne()", item)
 		panic(err)
 		return &ParserBaseItem{}
 	}

@@ -4,52 +4,14 @@
 
 package dota
 
-import proto "github.com/golang/protobuf/proto"
-import json "encoding/json"
+import proto "code.google.com/p/goprotobuf/proto"
 import math "math"
 
-// discarding unused import google_protobuf "github.com/dotabuff/sange/dota/google/protobuf/descriptor.pb"
+// discarding unused import google_protobuf "github.com/dotabuff/sange/dota/google/protobuf"
 
-// Reference proto, json, and math imports to suppress error if they are not otherwise used.
+// Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = &json.SyntaxError{}
 var _ = math.Inf
-
-type Bidirectional_Messages int32
-
-const (
-	Bidirectional_Messages_bi_RebroadcastGameEvent Bidirectional_Messages = 16
-	Bidirectional_Messages_bi_RebroadcastSource    Bidirectional_Messages = 17
-	Bidirectional_Messages_bi_GameEvent            Bidirectional_Messages = 18
-)
-
-var Bidirectional_Messages_name = map[int32]string{
-	16: "bi_RebroadcastGameEvent",
-	17: "bi_RebroadcastSource",
-	18: "bi_GameEvent",
-}
-var Bidirectional_Messages_value = map[string]int32{
-	"bi_RebroadcastGameEvent": 16,
-	"bi_RebroadcastSource":    17,
-	"bi_GameEvent":            18,
-}
-
-func (x Bidirectional_Messages) Enum() *Bidirectional_Messages {
-	p := new(Bidirectional_Messages)
-	*p = x
-	return p
-}
-func (x Bidirectional_Messages) String() string {
-	return proto.EnumName(Bidirectional_Messages_name, int32(x))
-}
-func (x *Bidirectional_Messages) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(Bidirectional_Messages_value, data, "Bidirectional_Messages")
-	if err != nil {
-		return err
-	}
-	*x = Bidirectional_Messages(value)
-	return nil
-}
 
 type CLC_Messages int32
 
@@ -127,7 +89,7 @@ type SVC_Messages int32
 
 const (
 	SVC_Messages_svc_ServerInfo           SVC_Messages = 40
-	SVC_Messages_svc_SendTable            SVC_Messages = 41
+	SVC_Messages_svc_FlattenedSerializer  SVC_Messages = 41
 	SVC_Messages_svc_ClassInfo            SVC_Messages = 42
 	SVC_Messages_svc_SetPause             SVC_Messages = 43
 	SVC_Messages_svc_CreateStringTable    SVC_Messages = 44
@@ -148,11 +110,16 @@ const (
 	SVC_Messages_svc_StopSound            SVC_Messages = 59
 	SVC_Messages_svc_PeerList             SVC_Messages = 60
 	SVC_Messages_svc_PacketReliable       SVC_Messages = 61
+	SVC_Messages_svc_UserMessage          SVC_Messages = 62
+	SVC_Messages_svc_SendTable            SVC_Messages = 63
+	SVC_Messages_svc_GameEvent            SVC_Messages = 67
+	SVC_Messages_svc_TempEntities         SVC_Messages = 68
+	SVC_Messages_svc_GameEventList        SVC_Messages = 69
 )
 
 var SVC_Messages_name = map[int32]string{
 	40: "svc_ServerInfo",
-	41: "svc_SendTable",
+	41: "svc_FlattenedSerializer",
 	42: "svc_ClassInfo",
 	43: "svc_SetPause",
 	44: "svc_CreateStringTable",
@@ -173,10 +140,15 @@ var SVC_Messages_name = map[int32]string{
 	59: "svc_StopSound",
 	60: "svc_PeerList",
 	61: "svc_PacketReliable",
+	62: "svc_UserMessage",
+	63: "svc_SendTable",
+	67: "svc_GameEvent",
+	68: "svc_TempEntities",
+	69: "svc_GameEventList",
 }
 var SVC_Messages_value = map[string]int32{
 	"svc_ServerInfo":           40,
-	"svc_SendTable":            41,
+	"svc_FlattenedSerializer":  41,
 	"svc_ClassInfo":            42,
 	"svc_SetPause":             43,
 	"svc_CreateStringTable":    44,
@@ -197,6 +169,11 @@ var SVC_Messages_value = map[string]int32{
 	"svc_StopSound":            59,
 	"svc_PeerList":             60,
 	"svc_PacketReliable":       61,
+	"svc_UserMessage":          62,
+	"svc_SendTable":            63,
+	"svc_GameEvent":            67,
+	"svc_TempEntities":         68,
+	"svc_GameEventList":        69,
 }
 
 func (x SVC_Messages) Enum() *SVC_Messages {
@@ -213,36 +190,6 @@ func (x *SVC_Messages) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*x = SVC_Messages(value)
-	return nil
-}
-
-type SVC_Messages_LowFrequency int32
-
-const (
-	SVC_Messages_LowFrequency_svc_dummy SVC_Messages_LowFrequency = 600
-)
-
-var SVC_Messages_LowFrequency_name = map[int32]string{
-	600: "svc_dummy",
-}
-var SVC_Messages_LowFrequency_value = map[string]int32{
-	"svc_dummy": 600,
-}
-
-func (x SVC_Messages_LowFrequency) Enum() *SVC_Messages_LowFrequency {
-	p := new(SVC_Messages_LowFrequency)
-	*p = x
-	return p
-}
-func (x SVC_Messages_LowFrequency) String() string {
-	return proto.EnumName(SVC_Messages_LowFrequency_name, int32(x))
-}
-func (x *SVC_Messages_LowFrequency) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(SVC_Messages_LowFrequency_value, data, "SVC_Messages_LowFrequency")
-	if err != nil {
-		return err
-	}
-	*x = SVC_Messages_LowFrequency(value)
 	return nil
 }
 
@@ -276,45 +223,6 @@ func (x *VoiceDataFormatT) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*x = VoiceDataFormatT(value)
-	return nil
-}
-
-type EQueryCvarValueStatus int32
-
-const (
-	EQueryCvarValueStatus_eQueryCvarValueStatus_ValueIntact   EQueryCvarValueStatus = 0
-	EQueryCvarValueStatus_eQueryCvarValueStatus_CvarNotFound  EQueryCvarValueStatus = 1
-	EQueryCvarValueStatus_eQueryCvarValueStatus_NotACvar      EQueryCvarValueStatus = 2
-	EQueryCvarValueStatus_eQueryCvarValueStatus_CvarProtected EQueryCvarValueStatus = 3
-)
-
-var EQueryCvarValueStatus_name = map[int32]string{
-	0: "eQueryCvarValueStatus_ValueIntact",
-	1: "eQueryCvarValueStatus_CvarNotFound",
-	2: "eQueryCvarValueStatus_NotACvar",
-	3: "eQueryCvarValueStatus_CvarProtected",
-}
-var EQueryCvarValueStatus_value = map[string]int32{
-	"eQueryCvarValueStatus_ValueIntact":   0,
-	"eQueryCvarValueStatus_CvarNotFound":  1,
-	"eQueryCvarValueStatus_NotACvar":      2,
-	"eQueryCvarValueStatus_CvarProtected": 3,
-}
-
-func (x EQueryCvarValueStatus) Enum() *EQueryCvarValueStatus {
-	p := new(EQueryCvarValueStatus)
-	*p = x
-	return p
-}
-func (x EQueryCvarValueStatus) String() string {
-	return proto.EnumName(EQueryCvarValueStatus_name, int32(x))
-}
-func (x *EQueryCvarValueStatus) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(EQueryCvarValueStatus_value, data, "EQueryCvarValueStatus")
-	if err != nil {
-		return err
-	}
-	*x = EQueryCvarValueStatus(value)
 	return nil
 }
 
@@ -420,6 +328,45 @@ func (x *ESplitScreenMessageType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+type EQueryCvarValueStatus int32
+
+const (
+	EQueryCvarValueStatus_eQueryCvarValueStatus_ValueIntact   EQueryCvarValueStatus = 0
+	EQueryCvarValueStatus_eQueryCvarValueStatus_CvarNotFound  EQueryCvarValueStatus = 1
+	EQueryCvarValueStatus_eQueryCvarValueStatus_NotACvar      EQueryCvarValueStatus = 2
+	EQueryCvarValueStatus_eQueryCvarValueStatus_CvarProtected EQueryCvarValueStatus = 3
+)
+
+var EQueryCvarValueStatus_name = map[int32]string{
+	0: "eQueryCvarValueStatus_ValueIntact",
+	1: "eQueryCvarValueStatus_CvarNotFound",
+	2: "eQueryCvarValueStatus_NotACvar",
+	3: "eQueryCvarValueStatus_CvarProtected",
+}
+var EQueryCvarValueStatus_value = map[string]int32{
+	"eQueryCvarValueStatus_ValueIntact":   0,
+	"eQueryCvarValueStatus_CvarNotFound":  1,
+	"eQueryCvarValueStatus_NotACvar":      2,
+	"eQueryCvarValueStatus_CvarProtected": 3,
+}
+
+func (x EQueryCvarValueStatus) Enum() *EQueryCvarValueStatus {
+	p := new(EQueryCvarValueStatus)
+	*p = x
+	return p
+}
+func (x EQueryCvarValueStatus) String() string {
+	return proto.EnumName(EQueryCvarValueStatus_name, int32(x))
+}
+func (x *EQueryCvarValueStatus) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(EQueryCvarValueStatus_value, data, "EQueryCvarValueStatus")
+	if err != nil {
+		return err
+	}
+	*x = EQueryCvarValueStatus(value)
+	return nil
+}
+
 type DIALOG_TYPE int32
 
 const (
@@ -462,74 +409,93 @@ func (x *DIALOG_TYPE) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-type CBidirMsg_RebroadcastGameEvent struct {
-	Posttoserver     *bool   `protobuf:"varint,1,opt,name=posttoserver" json:"posttoserver,omitempty"`
-	Buftype          *int32  `protobuf:"varint,2,opt,name=buftype" json:"buftype,omitempty"`
-	Clientbitcount   *uint32 `protobuf:"varint,3,opt,name=clientbitcount" json:"clientbitcount,omitempty"`
-	Receivingclients *uint64 `protobuf:"varint,4,opt,name=receivingclients" json:"receivingclients,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+type SVC_Messages_LowFrequency int32
+
+const (
+	SVC_Messages_LowFrequency_svc_dummy SVC_Messages_LowFrequency = 600
+)
+
+var SVC_Messages_LowFrequency_name = map[int32]string{
+	600: "svc_dummy",
+}
+var SVC_Messages_LowFrequency_value = map[string]int32{
+	"svc_dummy": 600,
 }
 
-func (m *CBidirMsg_RebroadcastGameEvent) Reset()         { *m = CBidirMsg_RebroadcastGameEvent{} }
-func (m *CBidirMsg_RebroadcastGameEvent) String() string { return proto.CompactTextString(m) }
-func (*CBidirMsg_RebroadcastGameEvent) ProtoMessage()    {}
-
-func (m *CBidirMsg_RebroadcastGameEvent) GetPosttoserver() bool {
-	if m != nil && m.Posttoserver != nil {
-		return *m.Posttoserver
+func (x SVC_Messages_LowFrequency) Enum() *SVC_Messages_LowFrequency {
+	p := new(SVC_Messages_LowFrequency)
+	*p = x
+	return p
+}
+func (x SVC_Messages_LowFrequency) String() string {
+	return proto.EnumName(SVC_Messages_LowFrequency_name, int32(x))
+}
+func (x *SVC_Messages_LowFrequency) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(SVC_Messages_LowFrequency_value, data, "SVC_Messages_LowFrequency")
+	if err != nil {
+		return err
 	}
-	return false
+	*x = SVC_Messages_LowFrequency(value)
+	return nil
 }
 
-func (m *CBidirMsg_RebroadcastGameEvent) GetBuftype() int32 {
-	if m != nil && m.Buftype != nil {
-		return *m.Buftype
+type Bidirectional_Messages int32
+
+const (
+	Bidirectional_Messages_bi_RebroadcastGameEvent Bidirectional_Messages = 16
+	Bidirectional_Messages_bi_RebroadcastSource    Bidirectional_Messages = 17
+	Bidirectional_Messages_bi_GameEvent            Bidirectional_Messages = 18
+)
+
+var Bidirectional_Messages_name = map[int32]string{
+	16: "bi_RebroadcastGameEvent",
+	17: "bi_RebroadcastSource",
+	18: "bi_GameEvent",
+}
+var Bidirectional_Messages_value = map[string]int32{
+	"bi_RebroadcastGameEvent": 16,
+	"bi_RebroadcastSource":    17,
+	"bi_GameEvent":            18,
+}
+
+func (x Bidirectional_Messages) Enum() *Bidirectional_Messages {
+	p := new(Bidirectional_Messages)
+	*p = x
+	return p
+}
+func (x Bidirectional_Messages) String() string {
+	return proto.EnumName(Bidirectional_Messages_name, int32(x))
+}
+func (x *Bidirectional_Messages) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(Bidirectional_Messages_value, data, "Bidirectional_Messages")
+	if err != nil {
+		return err
 	}
-	return 0
-}
-
-func (m *CBidirMsg_RebroadcastGameEvent) GetClientbitcount() uint32 {
-	if m != nil && m.Clientbitcount != nil {
-		return *m.Clientbitcount
-	}
-	return 0
-}
-
-func (m *CBidirMsg_RebroadcastGameEvent) GetReceivingclients() uint64 {
-	if m != nil && m.Receivingclients != nil {
-		return *m.Receivingclients
-	}
-	return 0
-}
-
-type CBidirMsg_RebroadcastSource struct {
-	Eventsource      *int32 `protobuf:"varint,1,opt,name=eventsource" json:"eventsource,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *CBidirMsg_RebroadcastSource) Reset()         { *m = CBidirMsg_RebroadcastSource{} }
-func (m *CBidirMsg_RebroadcastSource) String() string { return proto.CompactTextString(m) }
-func (*CBidirMsg_RebroadcastSource) ProtoMessage()    {}
-
-func (m *CBidirMsg_RebroadcastSource) GetEventsource() int32 {
-	if m != nil && m.Eventsource != nil {
-		return *m.Eventsource
-	}
-	return 0
+	*x = Bidirectional_Messages(value)
+	return nil
 }
 
 type CCLCMsg_ClientInfo struct {
-	ServerCount      *uint32  `protobuf:"varint,1,opt,name=server_count" json:"server_count,omitempty"`
-	IsHltv           *bool    `protobuf:"varint,2,opt,name=is_hltv" json:"is_hltv,omitempty"`
-	IsReplay         *bool    `protobuf:"varint,3,opt,name=is_replay" json:"is_replay,omitempty"`
-	FriendsId        *uint32  `protobuf:"varint,4,opt,name=friends_id" json:"friends_id,omitempty"`
-	CustomFiles      []uint32 `protobuf:"fixed32,5,rep,name=custom_files" json:"custom_files,omitempty"`
+	SendTableCrc     *uint32  `protobuf:"fixed32,1,opt,name=send_table_crc" json:"send_table_crc,omitempty"`
+	ServerCount      *uint32  `protobuf:"varint,2,opt,name=server_count" json:"server_count,omitempty"`
+	IsHltv           *bool    `protobuf:"varint,3,opt,name=is_hltv" json:"is_hltv,omitempty"`
+	IsReplay         *bool    `protobuf:"varint,4,opt,name=is_replay" json:"is_replay,omitempty"`
+	FriendsId        *uint32  `protobuf:"varint,5,opt,name=friends_id" json:"friends_id,omitempty"`
+	FriendsName      *string  `protobuf:"bytes,6,opt,name=friends_name" json:"friends_name,omitempty"`
+	CustomFiles      []uint32 `protobuf:"fixed32,7,rep,name=custom_files" json:"custom_files,omitempty"`
 	XXX_unrecognized []byte   `json:"-"`
 }
 
 func (m *CCLCMsg_ClientInfo) Reset()         { *m = CCLCMsg_ClientInfo{} }
 func (m *CCLCMsg_ClientInfo) String() string { return proto.CompactTextString(m) }
 func (*CCLCMsg_ClientInfo) ProtoMessage()    {}
+
+func (m *CCLCMsg_ClientInfo) GetSendTableCrc() uint32 {
+	if m != nil && m.SendTableCrc != nil {
+		return *m.SendTableCrc
+	}
+	return 0
+}
 
 func (m *CCLCMsg_ClientInfo) GetServerCount() uint32 {
 	if m != nil && m.ServerCount != nil {
@@ -557,6 +523,13 @@ func (m *CCLCMsg_ClientInfo) GetFriendsId() uint32 {
 		return *m.FriendsId
 	}
 	return 0
+}
+
+func (m *CCLCMsg_ClientInfo) GetFriendsName() string {
+	if m != nil && m.FriendsName != nil {
+		return *m.FriendsName
+	}
+	return ""
 }
 
 func (m *CCLCMsg_ClientInfo) GetCustomFiles() []uint32 {
@@ -599,10 +572,13 @@ func (m *CCLCMsg_Move) GetData() []byte {
 }
 
 type CCLCMsg_VoiceData struct {
-	Data             []byte            `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
-	Xuid             *uint64           `protobuf:"fixed64,2,opt,name=xuid" json:"xuid,omitempty"`
-	Format           *VoiceDataFormatT `protobuf:"varint,3,opt,name=format,enum=dota.VoiceDataFormatT,def=0" json:"format,omitempty"`
-	XXX_unrecognized []byte            `json:"-"`
+	Data                     []byte            `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
+	Xuid                     *uint64           `protobuf:"fixed64,2,opt,name=xuid" json:"xuid,omitempty"`
+	Format                   *VoiceDataFormatT `protobuf:"varint,3,opt,name=format,enum=dota.VoiceDataFormatT,def=0" json:"format,omitempty"`
+	SequenceBytes            *int32            `protobuf:"varint,4,opt,name=sequence_bytes" json:"sequence_bytes,omitempty"`
+	SectionNumber            *uint32           `protobuf:"varint,5,opt,name=section_number" json:"section_number,omitempty"`
+	UncompressedSampleOffset *uint32           `protobuf:"varint,6,opt,name=uncompressed_sample_offset" json:"uncompressed_sample_offset,omitempty"`
+	XXX_unrecognized         []byte            `json:"-"`
 }
 
 func (m *CCLCMsg_VoiceData) Reset()         { *m = CCLCMsg_VoiceData{} }
@@ -630,6 +606,27 @@ func (m *CCLCMsg_VoiceData) GetFormat() VoiceDataFormatT {
 		return *m.Format
 	}
 	return Default_CCLCMsg_VoiceData_Format
+}
+
+func (m *CCLCMsg_VoiceData) GetSequenceBytes() int32 {
+	if m != nil && m.SequenceBytes != nil {
+		return *m.SequenceBytes
+	}
+	return 0
+}
+
+func (m *CCLCMsg_VoiceData) GetSectionNumber() uint32 {
+	if m != nil && m.SectionNumber != nil {
+		return *m.SectionNumber
+	}
+	return 0
+}
+
+func (m *CCLCMsg_VoiceData) GetUncompressedSampleOffset() uint32 {
+	if m != nil && m.UncompressedSampleOffset != nil {
+		return *m.UncompressedSampleOffset
+	}
+	return 0
 }
 
 type CCLCMsg_BaselineAck struct {
@@ -673,18 +670,16 @@ func (m *CCLCMsg_ListenEvents) GetEventMask() []uint32 {
 }
 
 type CCLCMsg_RespondCvarValue struct {
-	Cookie           *int32                 `protobuf:"varint,1,opt,name=cookie" json:"cookie,omitempty"`
-	StatusCode       *EQueryCvarValueStatus `protobuf:"varint,2,opt,name=status_code,enum=dota.EQueryCvarValueStatus,def=0" json:"status_code,omitempty"`
-	Name             *string                `protobuf:"bytes,3,opt,name=name" json:"name,omitempty"`
-	Value            *string                `protobuf:"bytes,4,opt,name=value" json:"value,omitempty"`
-	XXX_unrecognized []byte                 `json:"-"`
+	Cookie           *int32  `protobuf:"varint,1,opt,name=cookie" json:"cookie,omitempty"`
+	StatusCode       *int32  `protobuf:"varint,2,opt,name=status_code" json:"status_code,omitempty"`
+	Name             *string `protobuf:"bytes,3,opt,name=name" json:"name,omitempty"`
+	Value            *string `protobuf:"bytes,4,opt,name=value" json:"value,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
 }
 
 func (m *CCLCMsg_RespondCvarValue) Reset()         { *m = CCLCMsg_RespondCvarValue{} }
 func (m *CCLCMsg_RespondCvarValue) String() string { return proto.CompactTextString(m) }
 func (*CCLCMsg_RespondCvarValue) ProtoMessage()    {}
-
-const Default_CCLCMsg_RespondCvarValue_StatusCode EQueryCvarValueStatus = EQueryCvarValueStatus_eQueryCvarValueStatus_ValueIntact
 
 func (m *CCLCMsg_RespondCvarValue) GetCookie() int32 {
 	if m != nil && m.Cookie != nil {
@@ -693,11 +688,11 @@ func (m *CCLCMsg_RespondCvarValue) GetCookie() int32 {
 	return 0
 }
 
-func (m *CCLCMsg_RespondCvarValue) GetStatusCode() EQueryCvarValueStatus {
+func (m *CCLCMsg_RespondCvarValue) GetStatusCode() int32 {
 	if m != nil && m.StatusCode != nil {
 		return *m.StatusCode
 	}
-	return Default_CCLCMsg_RespondCvarValue_StatusCode
+	return 0
 }
 
 func (m *CCLCMsg_RespondCvarValue) GetName() string {
@@ -715,7 +710,9 @@ func (m *CCLCMsg_RespondCvarValue) GetValue() string {
 }
 
 type CCLCMsg_FileCRCCheck struct {
+	CodePath         *int32  `protobuf:"varint,1,opt,name=code_path" json:"code_path,omitempty"`
 	Path             *string `protobuf:"bytes,2,opt,name=path" json:"path,omitempty"`
+	CodeFilename     *int32  `protobuf:"varint,3,opt,name=code_filename" json:"code_filename,omitempty"`
 	Filename         *string `protobuf:"bytes,4,opt,name=filename" json:"filename,omitempty"`
 	Crc              *uint32 `protobuf:"fixed32,5,opt,name=crc" json:"crc,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
@@ -725,11 +722,25 @@ func (m *CCLCMsg_FileCRCCheck) Reset()         { *m = CCLCMsg_FileCRCCheck{} }
 func (m *CCLCMsg_FileCRCCheck) String() string { return proto.CompactTextString(m) }
 func (*CCLCMsg_FileCRCCheck) ProtoMessage()    {}
 
+func (m *CCLCMsg_FileCRCCheck) GetCodePath() int32 {
+	if m != nil && m.CodePath != nil {
+		return *m.CodePath
+	}
+	return 0
+}
+
 func (m *CCLCMsg_FileCRCCheck) GetPath() string {
 	if m != nil && m.Path != nil {
 		return *m.Path
 	}
 	return ""
+}
+
+func (m *CCLCMsg_FileCRCCheck) GetCodeFilename() int32 {
+	if m != nil && m.CodeFilename != nil {
+		return *m.CodeFilename
+	}
+	return 0
 }
 
 func (m *CCLCMsg_FileCRCCheck) GetFilename() string {
@@ -763,8 +774,8 @@ func (m *CCLCMsg_LoadingProgress) GetProgress() int32 {
 }
 
 type CCLCMsg_SplitPlayerConnect struct {
-	Playername       *string     `protobuf:"bytes,1,opt,name=playername" json:"playername,omitempty"`
-	Convars          *CMsg_CVars `protobuf:"bytes,2,opt,name=convars" json:"convars,omitempty"`
+	Convars          *CMsg_CVars `protobuf:"bytes,1,opt,name=convars" json:"convars,omitempty"`
+	Playername       *string     `protobuf:"bytes,2,opt,name=playername" json:"playername,omitempty"`
 	XXX_unrecognized []byte      `json:"-"`
 }
 
@@ -772,18 +783,18 @@ func (m *CCLCMsg_SplitPlayerConnect) Reset()         { *m = CCLCMsg_SplitPlayerC
 func (m *CCLCMsg_SplitPlayerConnect) String() string { return proto.CompactTextString(m) }
 func (*CCLCMsg_SplitPlayerConnect) ProtoMessage()    {}
 
-func (m *CCLCMsg_SplitPlayerConnect) GetPlayername() string {
-	if m != nil && m.Playername != nil {
-		return *m.Playername
-	}
-	return ""
-}
-
 func (m *CCLCMsg_SplitPlayerConnect) GetConvars() *CMsg_CVars {
 	if m != nil {
 		return m.Convars
 	}
 	return nil
+}
+
+func (m *CCLCMsg_SplitPlayerConnect) GetPlayername() string {
+	if m != nil && m.Playername != nil {
+		return *m.Playername
+	}
+	return ""
 }
 
 type CCLCMsg_ClientMessage struct {
@@ -891,6 +902,9 @@ type CSVCMsg_ServerInfo struct {
 	IsHltv              *bool                             `protobuf:"varint,4,opt,name=is_hltv" json:"is_hltv,omitempty"`
 	IsReplay            *bool                             `protobuf:"varint,5,opt,name=is_replay" json:"is_replay,omitempty"`
 	COs                 *int32                            `protobuf:"varint,6,opt,name=c_os" json:"c_os,omitempty"`
+	MapCrc              *uint32                           `protobuf:"fixed32,7,opt,name=map_crc" json:"map_crc,omitempty"`
+	ClientCrc           *uint32                           `protobuf:"fixed32,8,opt,name=client_crc" json:"client_crc,omitempty"`
+	StringTableCrc      *uint32                           `protobuf:"fixed32,9,opt,name=string_table_crc" json:"string_table_crc,omitempty"`
 	MaxClients          *int32                            `protobuf:"varint,10,opt,name=max_clients" json:"max_clients,omitempty"`
 	MaxClasses          *int32                            `protobuf:"varint,11,opt,name=max_classes" json:"max_classes,omitempty"`
 	PlayerSlot          *int32                            `protobuf:"varint,12,opt,name=player_slot" json:"player_slot,omitempty"`
@@ -899,9 +913,9 @@ type CSVCMsg_ServerInfo struct {
 	MapName             *string                           `protobuf:"bytes,15,opt,name=map_name" json:"map_name,omitempty"`
 	SkyName             *string                           `protobuf:"bytes,16,opt,name=sky_name" json:"sky_name,omitempty"`
 	HostName            *string                           `protobuf:"bytes,17,opt,name=host_name" json:"host_name,omitempty"`
-	GameSessionConfig   *CSVCMsg_GameSessionConfiguration `protobuf:"bytes,18,opt,name=game_session_config" json:"game_session_config,omitempty"`
-	GameSessionManifest []byte                            `protobuf:"bytes,19,opt,name=game_session_manifest" json:"game_session_manifest,omitempty"`
-	AddonName           *string                           `protobuf:"bytes,20,opt,name=addon_name" json:"addon_name,omitempty"`
+	AddonName           *string                           `protobuf:"bytes,18,opt,name=addon_name" json:"addon_name,omitempty"`
+	GameSessionConfig   *CSVCMsg_GameSessionConfiguration `protobuf:"bytes,19,opt,name=game_session_config" json:"game_session_config,omitempty"`
+	GameSessionManifest []byte                            `protobuf:"bytes,20,opt,name=game_session_manifest" json:"game_session_manifest,omitempty"`
 	XXX_unrecognized    []byte                            `json:"-"`
 }
 
@@ -947,6 +961,27 @@ func (m *CSVCMsg_ServerInfo) GetIsReplay() bool {
 func (m *CSVCMsg_ServerInfo) GetCOs() int32 {
 	if m != nil && m.COs != nil {
 		return *m.COs
+	}
+	return 0
+}
+
+func (m *CSVCMsg_ServerInfo) GetMapCrc() uint32 {
+	if m != nil && m.MapCrc != nil {
+		return *m.MapCrc
+	}
+	return 0
+}
+
+func (m *CSVCMsg_ServerInfo) GetClientCrc() uint32 {
+	if m != nil && m.ClientCrc != nil {
+		return *m.ClientCrc
+	}
+	return 0
+}
+
+func (m *CSVCMsg_ServerInfo) GetStringTableCrc() uint32 {
+	if m != nil && m.StringTableCrc != nil {
+		return *m.StringTableCrc
 	}
 	return 0
 }
@@ -1007,6 +1042,13 @@ func (m *CSVCMsg_ServerInfo) GetHostName() string {
 	return ""
 }
 
+func (m *CSVCMsg_ServerInfo) GetAddonName() string {
+	if m != nil && m.AddonName != nil {
+		return *m.AddonName
+	}
+	return ""
+}
+
 func (m *CSVCMsg_ServerInfo) GetGameSessionConfig() *CSVCMsg_GameSessionConfiguration {
 	if m != nil {
 		return m.GameSessionConfig
@@ -1019,13 +1061,6 @@ func (m *CSVCMsg_ServerInfo) GetGameSessionManifest() []byte {
 		return m.GameSessionManifest
 	}
 	return nil
-}
-
-func (m *CSVCMsg_ServerInfo) GetAddonName() string {
-	if m != nil && m.AddonName != nil {
-		return *m.AddonName
-	}
-	return ""
 }
 
 type CSVCMsg_ClassInfo struct {
@@ -1054,7 +1089,8 @@ func (m *CSVCMsg_ClassInfo) GetClasses() []*CSVCMsg_ClassInfoClassT {
 
 type CSVCMsg_ClassInfoClassT struct {
 	ClassId          *int32  `protobuf:"varint,1,opt,name=class_id" json:"class_id,omitempty"`
-	ClassName        *string `protobuf:"bytes,2,opt,name=class_name" json:"class_name,omitempty"`
+	DataTableName    *string `protobuf:"bytes,2,opt,name=data_table_name" json:"data_table_name,omitempty"`
+	ClassName        *string `protobuf:"bytes,3,opt,name=class_name" json:"class_name,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
@@ -1067,6 +1103,13 @@ func (m *CSVCMsg_ClassInfoClassT) GetClassId() int32 {
 		return *m.ClassId
 	}
 	return 0
+}
+
+func (m *CSVCMsg_ClassInfoClassT) GetDataTableName() string {
+	if m != nil && m.DataTableName != nil {
+		return *m.DataTableName
+	}
+	return ""
 }
 
 func (m *CSVCMsg_ClassInfoClassT) GetClassName() string {
@@ -1140,22 +1183,6 @@ func (m *CSVCMsg_Print) GetText() string {
 		return *m.Text
 	}
 	return ""
-}
-
-type CSVCMsg_StopSound struct {
-	Guid             *uint32 `protobuf:"fixed32,1,opt,name=guid" json:"guid,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
-}
-
-func (m *CSVCMsg_StopSound) Reset()         { *m = CSVCMsg_StopSound{} }
-func (m *CSVCMsg_StopSound) String() string { return proto.CompactTextString(m) }
-func (*CSVCMsg_StopSound) ProtoMessage()    {}
-
-func (m *CSVCMsg_StopSound) GetGuid() uint32 {
-	if m != nil && m.Guid != nil {
-		return *m.Guid
-	}
-	return 0
 }
 
 type CSVCMsg_Sounds struct {
@@ -1343,8 +1370,8 @@ func (m *CSVCMsg_SoundsSounddataT) GetSoundResourceId() uint64 {
 }
 
 type CSVCMsg_Prefetch struct {
-	ResourceType     *PrefetchType `protobuf:"varint,1,opt,name=resource_type,enum=dota.PrefetchType,def=0" json:"resource_type,omitempty"`
-	StringNumber     *int32        `protobuf:"varint,2,opt,name=string_number" json:"string_number,omitempty"`
+	SoundIndex       *int32        `protobuf:"varint,1,opt,name=sound_index" json:"sound_index,omitempty"`
+	ResourceType     *PrefetchType `protobuf:"varint,2,opt,name=resource_type,enum=dota.PrefetchType,def=0" json:"resource_type,omitempty"`
 	XXX_unrecognized []byte        `json:"-"`
 }
 
@@ -1354,18 +1381,18 @@ func (*CSVCMsg_Prefetch) ProtoMessage()    {}
 
 const Default_CSVCMsg_Prefetch_ResourceType PrefetchType = PrefetchType_PFT_SOUND
 
+func (m *CSVCMsg_Prefetch) GetSoundIndex() int32 {
+	if m != nil && m.SoundIndex != nil {
+		return *m.SoundIndex
+	}
+	return 0
+}
+
 func (m *CSVCMsg_Prefetch) GetResourceType() PrefetchType {
 	if m != nil && m.ResourceType != nil {
 		return *m.ResourceType
 	}
 	return Default_CSVCMsg_Prefetch_ResourceType
-}
-
-func (m *CSVCMsg_Prefetch) GetStringNumber() int32 {
-	if m != nil && m.StringNumber != nil {
-		return *m.StringNumber
-	}
-	return 0
 }
 
 type CSVCMsg_SetView struct {
@@ -1390,6 +1417,30 @@ func (m *CSVCMsg_SetView) GetSlot() int32 {
 		return *m.Slot
 	}
 	return 0
+}
+
+type CSVCMsg_FixAngle struct {
+	Relative         *bool       `protobuf:"varint,1,opt,name=relative" json:"relative,omitempty"`
+	Angle            *CMsgQAngle `protobuf:"bytes,2,opt,name=angle" json:"angle,omitempty"`
+	XXX_unrecognized []byte      `json:"-"`
+}
+
+func (m *CSVCMsg_FixAngle) Reset()         { *m = CSVCMsg_FixAngle{} }
+func (m *CSVCMsg_FixAngle) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_FixAngle) ProtoMessage()    {}
+
+func (m *CSVCMsg_FixAngle) GetRelative() bool {
+	if m != nil && m.Relative != nil {
+		return *m.Relative
+	}
+	return false
+}
+
+func (m *CSVCMsg_FixAngle) GetAngle() *CMsgQAngle {
+	if m != nil {
+		return m.Angle
+	}
+	return nil
 }
 
 type CSVCMsg_CrosshairAngle struct {
@@ -1515,22 +1566,20 @@ func (m *CSVCMsg_GetCvarValue) GetCvarName() string {
 }
 
 type CSVCMsg_Menu struct {
-	DialogType       *DIALOG_TYPE `protobuf:"varint,1,opt,name=dialog_type,enum=dota.DIALOG_TYPE,def=0" json:"dialog_type,omitempty"`
-	MenuKeyValues    []byte       `protobuf:"bytes,2,opt,name=menu_key_values" json:"menu_key_values,omitempty"`
-	XXX_unrecognized []byte       `json:"-"`
+	DialogType       *int32 `protobuf:"varint,1,opt,name=dialog_type" json:"dialog_type,omitempty"`
+	MenuKeyValues    []byte `protobuf:"bytes,2,opt,name=menu_key_values" json:"menu_key_values,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
 }
 
 func (m *CSVCMsg_Menu) Reset()         { *m = CSVCMsg_Menu{} }
 func (m *CSVCMsg_Menu) String() string { return proto.CompactTextString(m) }
 func (*CSVCMsg_Menu) ProtoMessage()    {}
 
-const Default_CSVCMsg_Menu_DialogType DIALOG_TYPE = DIALOG_TYPE_DIALOG_MSG
-
-func (m *CSVCMsg_Menu) GetDialogType() DIALOG_TYPE {
+func (m *CSVCMsg_Menu) GetDialogType() int32 {
 	if m != nil && m.DialogType != nil {
 		return *m.DialogType
 	}
-	return Default_CSVCMsg_Menu_DialogType
+	return 0
 }
 
 func (m *CSVCMsg_Menu) GetMenuKeyValues() []byte {
@@ -1540,15 +1589,208 @@ func (m *CSVCMsg_Menu) GetMenuKeyValues() []byte {
 	return nil
 }
 
+type CSVCMsg_SendTable struct {
+	IsEnd            *bool                         `protobuf:"varint,1,opt,name=is_end" json:"is_end,omitempty"`
+	NetTableName     *string                       `protobuf:"bytes,2,opt,name=net_table_name" json:"net_table_name,omitempty"`
+	NeedsDecoder     *bool                         `protobuf:"varint,3,opt,name=needs_decoder" json:"needs_decoder,omitempty"`
+	Props            []*CSVCMsg_SendTableSendpropT `protobuf:"bytes,4,rep,name=props" json:"props,omitempty"`
+	XXX_unrecognized []byte                        `json:"-"`
+}
+
+func (m *CSVCMsg_SendTable) Reset()         { *m = CSVCMsg_SendTable{} }
+func (m *CSVCMsg_SendTable) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_SendTable) ProtoMessage()    {}
+
+func (m *CSVCMsg_SendTable) GetIsEnd() bool {
+	if m != nil && m.IsEnd != nil {
+		return *m.IsEnd
+	}
+	return false
+}
+
+func (m *CSVCMsg_SendTable) GetNetTableName() string {
+	if m != nil && m.NetTableName != nil {
+		return *m.NetTableName
+	}
+	return ""
+}
+
+func (m *CSVCMsg_SendTable) GetNeedsDecoder() bool {
+	if m != nil && m.NeedsDecoder != nil {
+		return *m.NeedsDecoder
+	}
+	return false
+}
+
+func (m *CSVCMsg_SendTable) GetProps() []*CSVCMsg_SendTableSendpropT {
+	if m != nil {
+		return m.Props
+	}
+	return nil
+}
+
+type CSVCMsg_SendTableSendpropT struct {
+	Type             *int32   `protobuf:"varint,1,opt,name=type" json:"type,omitempty"`
+	VarName          *string  `protobuf:"bytes,2,opt,name=var_name" json:"var_name,omitempty"`
+	Flags            *int32   `protobuf:"varint,3,opt,name=flags" json:"flags,omitempty"`
+	Priority         *int32   `protobuf:"varint,4,opt,name=priority" json:"priority,omitempty"`
+	DtName           *string  `protobuf:"bytes,5,opt,name=dt_name" json:"dt_name,omitempty"`
+	NumElements      *int32   `protobuf:"varint,6,opt,name=num_elements" json:"num_elements,omitempty"`
+	LowValue         *float32 `protobuf:"fixed32,7,opt,name=low_value" json:"low_value,omitempty"`
+	HighValue        *float32 `protobuf:"fixed32,8,opt,name=high_value" json:"high_value,omitempty"`
+	NumBits          *int32   `protobuf:"varint,9,opt,name=num_bits" json:"num_bits,omitempty"`
+	XXX_unrecognized []byte   `json:"-"`
+}
+
+func (m *CSVCMsg_SendTableSendpropT) Reset()         { *m = CSVCMsg_SendTableSendpropT{} }
+func (m *CSVCMsg_SendTableSendpropT) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_SendTableSendpropT) ProtoMessage()    {}
+
+func (m *CSVCMsg_SendTableSendpropT) GetType() int32 {
+	if m != nil && m.Type != nil {
+		return *m.Type
+	}
+	return 0
+}
+
+func (m *CSVCMsg_SendTableSendpropT) GetVarName() string {
+	if m != nil && m.VarName != nil {
+		return *m.VarName
+	}
+	return ""
+}
+
+func (m *CSVCMsg_SendTableSendpropT) GetFlags() int32 {
+	if m != nil && m.Flags != nil {
+		return *m.Flags
+	}
+	return 0
+}
+
+func (m *CSVCMsg_SendTableSendpropT) GetPriority() int32 {
+	if m != nil && m.Priority != nil {
+		return *m.Priority
+	}
+	return 0
+}
+
+func (m *CSVCMsg_SendTableSendpropT) GetDtName() string {
+	if m != nil && m.DtName != nil {
+		return *m.DtName
+	}
+	return ""
+}
+
+func (m *CSVCMsg_SendTableSendpropT) GetNumElements() int32 {
+	if m != nil && m.NumElements != nil {
+		return *m.NumElements
+	}
+	return 0
+}
+
+func (m *CSVCMsg_SendTableSendpropT) GetLowValue() float32 {
+	if m != nil && m.LowValue != nil {
+		return *m.LowValue
+	}
+	return 0
+}
+
+func (m *CSVCMsg_SendTableSendpropT) GetHighValue() float32 {
+	if m != nil && m.HighValue != nil {
+		return *m.HighValue
+	}
+	return 0
+}
+
+func (m *CSVCMsg_SendTableSendpropT) GetNumBits() int32 {
+	if m != nil && m.NumBits != nil {
+		return *m.NumBits
+	}
+	return 0
+}
+
+type CSVCMsg_GameEventList struct {
+	Descriptors      []*CSVCMsg_GameEventListDescriptorT `protobuf:"bytes,1,rep,name=descriptors" json:"descriptors,omitempty"`
+	XXX_unrecognized []byte                              `json:"-"`
+}
+
+func (m *CSVCMsg_GameEventList) Reset()         { *m = CSVCMsg_GameEventList{} }
+func (m *CSVCMsg_GameEventList) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_GameEventList) ProtoMessage()    {}
+
+func (m *CSVCMsg_GameEventList) GetDescriptors() []*CSVCMsg_GameEventListDescriptorT {
+	if m != nil {
+		return m.Descriptors
+	}
+	return nil
+}
+
+type CSVCMsg_GameEventListKeyT struct {
+	Type             *int32  `protobuf:"varint,1,opt,name=type" json:"type,omitempty"`
+	Name             *string `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *CSVCMsg_GameEventListKeyT) Reset()         { *m = CSVCMsg_GameEventListKeyT{} }
+func (m *CSVCMsg_GameEventListKeyT) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_GameEventListKeyT) ProtoMessage()    {}
+
+func (m *CSVCMsg_GameEventListKeyT) GetType() int32 {
+	if m != nil && m.Type != nil {
+		return *m.Type
+	}
+	return 0
+}
+
+func (m *CSVCMsg_GameEventListKeyT) GetName() string {
+	if m != nil && m.Name != nil {
+		return *m.Name
+	}
+	return ""
+}
+
+type CSVCMsg_GameEventListDescriptorT struct {
+	Eventid          *int32                       `protobuf:"varint,1,opt,name=eventid" json:"eventid,omitempty"`
+	Name             *string                      `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
+	Keys             []*CSVCMsg_GameEventListKeyT `protobuf:"bytes,3,rep,name=keys" json:"keys,omitempty"`
+	XXX_unrecognized []byte                       `json:"-"`
+}
+
+func (m *CSVCMsg_GameEventListDescriptorT) Reset()         { *m = CSVCMsg_GameEventListDescriptorT{} }
+func (m *CSVCMsg_GameEventListDescriptorT) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_GameEventListDescriptorT) ProtoMessage()    {}
+
+func (m *CSVCMsg_GameEventListDescriptorT) GetEventid() int32 {
+	if m != nil && m.Eventid != nil {
+		return *m.Eventid
+	}
+	return 0
+}
+
+func (m *CSVCMsg_GameEventListDescriptorT) GetName() string {
+	if m != nil && m.Name != nil {
+		return *m.Name
+	}
+	return ""
+}
+
+func (m *CSVCMsg_GameEventListDescriptorT) GetKeys() []*CSVCMsg_GameEventListKeyT {
+	if m != nil {
+		return m.Keys
+	}
+	return nil
+}
+
 type CSVCMsg_PacketEntities struct {
 	MaxEntries             *int32  `protobuf:"varint,1,opt,name=max_entries" json:"max_entries,omitempty"`
 	UpdatedEntries         *int32  `protobuf:"varint,2,opt,name=updated_entries" json:"updated_entries,omitempty"`
 	IsDelta                *bool   `protobuf:"varint,3,opt,name=is_delta" json:"is_delta,omitempty"`
 	UpdateBaseline         *bool   `protobuf:"varint,4,opt,name=update_baseline" json:"update_baseline,omitempty"`
-	Baseline               *bool   `protobuf:"varint,5,opt,name=baseline" json:"baseline,omitempty"`
+	Baseline               *int32  `protobuf:"varint,5,opt,name=baseline" json:"baseline,omitempty"`
 	DeltaFrom              *int32  `protobuf:"varint,6,opt,name=delta_from" json:"delta_from,omitempty"`
-	ActiveSpawngroupHandle *uint32 `protobuf:"varint,7,opt,name=active_spawngroup_handle" json:"active_spawngroup_handle,omitempty"`
-	EntityData             []byte  `protobuf:"bytes,8,opt,name=entity_data" json:"entity_data,omitempty"`
+	EntityData             []byte  `protobuf:"bytes,7,opt,name=entity_data" json:"entity_data,omitempty"`
+	PendingFullFrame       *bool   `protobuf:"varint,8,opt,name=pending_full_frame" json:"pending_full_frame,omitempty"`
+	ActiveSpawngroupHandle *uint32 `protobuf:"varint,9,opt,name=active_spawngroup_handle" json:"active_spawngroup_handle,omitempty"`
 	XXX_unrecognized       []byte  `json:"-"`
 }
 
@@ -1584,23 +1826,16 @@ func (m *CSVCMsg_PacketEntities) GetUpdateBaseline() bool {
 	return false
 }
 
-func (m *CSVCMsg_PacketEntities) GetBaseline() bool {
+func (m *CSVCMsg_PacketEntities) GetBaseline() int32 {
 	if m != nil && m.Baseline != nil {
 		return *m.Baseline
 	}
-	return false
+	return 0
 }
 
 func (m *CSVCMsg_PacketEntities) GetDeltaFrom() int32 {
 	if m != nil && m.DeltaFrom != nil {
 		return *m.DeltaFrom
-	}
-	return 0
-}
-
-func (m *CSVCMsg_PacketEntities) GetActiveSpawngroupHandle() uint32 {
-	if m != nil && m.ActiveSpawngroupHandle != nil {
-		return *m.ActiveSpawngroupHandle
 	}
 	return 0
 }
@@ -1612,28 +1847,50 @@ func (m *CSVCMsg_PacketEntities) GetEntityData() []byte {
 	return nil
 }
 
-type CSVCMsg_ClearAllStringTables struct {
-	Mapname          *string `protobuf:"bytes,1,opt,name=mapname" json:"mapname,omitempty"`
-	MapCrc           *uint32 `protobuf:"varint,2,opt,name=map_crc" json:"map_crc,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
-}
-
-func (m *CSVCMsg_ClearAllStringTables) Reset()         { *m = CSVCMsg_ClearAllStringTables{} }
-func (m *CSVCMsg_ClearAllStringTables) String() string { return proto.CompactTextString(m) }
-func (*CSVCMsg_ClearAllStringTables) ProtoMessage()    {}
-
-func (m *CSVCMsg_ClearAllStringTables) GetMapname() string {
-	if m != nil && m.Mapname != nil {
-		return *m.Mapname
+func (m *CSVCMsg_PacketEntities) GetPendingFullFrame() bool {
+	if m != nil && m.PendingFullFrame != nil {
+		return *m.PendingFullFrame
 	}
-	return ""
+	return false
 }
 
-func (m *CSVCMsg_ClearAllStringTables) GetMapCrc() uint32 {
-	if m != nil && m.MapCrc != nil {
-		return *m.MapCrc
+func (m *CSVCMsg_PacketEntities) GetActiveSpawngroupHandle() uint32 {
+	if m != nil && m.ActiveSpawngroupHandle != nil {
+		return *m.ActiveSpawngroupHandle
 	}
 	return 0
+}
+
+type CSVCMsg_TempEntities struct {
+	Reliable         *bool  `protobuf:"varint,1,opt,name=reliable" json:"reliable,omitempty"`
+	NumEntries       *int32 `protobuf:"varint,2,opt,name=num_entries" json:"num_entries,omitempty"`
+	EntityData       []byte `protobuf:"bytes,3,opt,name=entity_data" json:"entity_data,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CSVCMsg_TempEntities) Reset()         { *m = CSVCMsg_TempEntities{} }
+func (m *CSVCMsg_TempEntities) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_TempEntities) ProtoMessage()    {}
+
+func (m *CSVCMsg_TempEntities) GetReliable() bool {
+	if m != nil && m.Reliable != nil {
+		return *m.Reliable
+	}
+	return false
+}
+
+func (m *CSVCMsg_TempEntities) GetNumEntries() int32 {
+	if m != nil && m.NumEntries != nil {
+		return *m.NumEntries
+	}
+	return 0
+}
+
+func (m *CSVCMsg_TempEntities) GetEntityData() []byte {
+	if m != nil {
+		return m.EntityData
+	}
+	return nil
 }
 
 type CSVCMsg_CreateStringTable struct {
@@ -1641,11 +1898,12 @@ type CSVCMsg_CreateStringTable struct {
 	MaxEntries        *int32  `protobuf:"varint,2,opt,name=max_entries" json:"max_entries,omitempty"`
 	NumEntries        *int32  `protobuf:"varint,3,opt,name=num_entries" json:"num_entries,omitempty"`
 	UserDataFixedSize *bool   `protobuf:"varint,4,opt,name=user_data_fixed_size" json:"user_data_fixed_size,omitempty"`
-	DataCompressed    *bool   `protobuf:"varint,5,opt,name=data_compressed" json:"data_compressed,omitempty"`
-	UserDataSize      *int32  `protobuf:"varint,6,opt,name=user_data_size" json:"user_data_size,omitempty"`
-	UserDataSizeBits  *int32  `protobuf:"varint,7,opt,name=user_data_size_bits" json:"user_data_size_bits,omitempty"`
-	Flags             *int32  `protobuf:"varint,8,opt,name=flags" json:"flags,omitempty"`
-	StringData        []byte  `protobuf:"bytes,9,opt,name=string_data" json:"string_data,omitempty"`
+	UserDataSize      *int32  `protobuf:"varint,5,opt,name=user_data_size" json:"user_data_size,omitempty"`
+	UserDataSizeBits  *int32  `protobuf:"varint,6,opt,name=user_data_size_bits" json:"user_data_size_bits,omitempty"`
+	Flags             *int32  `protobuf:"varint,7,opt,name=flags" json:"flags,omitempty"`
+	StringData        []byte  `protobuf:"bytes,8,opt,name=string_data" json:"string_data,omitempty"`
+	UncompressedSize  *int32  `protobuf:"varint,9,opt,name=uncompressed_size" json:"uncompressed_size,omitempty"`
+	DataCompressed    *bool   `protobuf:"varint,10,opt,name=data_compressed" json:"data_compressed,omitempty"`
 	XXX_unrecognized  []byte  `json:"-"`
 }
 
@@ -1681,13 +1939,6 @@ func (m *CSVCMsg_CreateStringTable) GetUserDataFixedSize() bool {
 	return false
 }
 
-func (m *CSVCMsg_CreateStringTable) GetDataCompressed() bool {
-	if m != nil && m.DataCompressed != nil {
-		return *m.DataCompressed
-	}
-	return false
-}
-
 func (m *CSVCMsg_CreateStringTable) GetUserDataSize() int32 {
 	if m != nil && m.UserDataSize != nil {
 		return *m.UserDataSize
@@ -1714,6 +1965,20 @@ func (m *CSVCMsg_CreateStringTable) GetStringData() []byte {
 		return m.StringData
 	}
 	return nil
+}
+
+func (m *CSVCMsg_CreateStringTable) GetUncompressedSize() int32 {
+	if m != nil && m.UncompressedSize != nil {
+		return *m.UncompressedSize
+	}
+	return 0
+}
+
+func (m *CSVCMsg_CreateStringTable) GetDataCompressed() bool {
+	if m != nil && m.DataCompressed != nil {
+		return *m.DataCompressed
+	}
+	return false
 }
 
 type CSVCMsg_UpdateStringTable struct {
@@ -1749,13 +2014,16 @@ func (m *CSVCMsg_UpdateStringTable) GetStringData() []byte {
 }
 
 type CSVCMsg_VoiceData struct {
-	Client           *int32            `protobuf:"varint,1,opt,name=client" json:"client,omitempty"`
-	Proximity        *bool             `protobuf:"varint,2,opt,name=proximity" json:"proximity,omitempty"`
-	Xuid             *uint64           `protobuf:"fixed64,3,opt,name=xuid" json:"xuid,omitempty"`
-	AudibleMask      *int32            `protobuf:"varint,4,opt,name=audible_mask" json:"audible_mask,omitempty"`
-	VoiceData        []byte            `protobuf:"bytes,5,opt,name=voice_data" json:"voice_data,omitempty"`
-	Format           *VoiceDataFormatT `protobuf:"varint,6,opt,name=format,enum=dota.VoiceDataFormatT,def=0" json:"format,omitempty"`
-	XXX_unrecognized []byte            `json:"-"`
+	Client                   *int32            `protobuf:"varint,1,opt,name=client" json:"client,omitempty"`
+	Proximity                *bool             `protobuf:"varint,2,opt,name=proximity" json:"proximity,omitempty"`
+	Xuid                     *uint64           `protobuf:"fixed64,3,opt,name=xuid" json:"xuid,omitempty"`
+	AudibleMask              *int32            `protobuf:"varint,4,opt,name=audible_mask" json:"audible_mask,omitempty"`
+	VoiceData                []byte            `protobuf:"bytes,5,opt,name=voice_data" json:"voice_data,omitempty"`
+	Format                   *VoiceDataFormatT `protobuf:"varint,6,opt,name=format,enum=dota.VoiceDataFormatT,def=0" json:"format,omitempty"`
+	SequenceBytes            *int32            `protobuf:"varint,7,opt,name=sequence_bytes" json:"sequence_bytes,omitempty"`
+	SectionNumber            *uint32           `protobuf:"varint,8,opt,name=section_number" json:"section_number,omitempty"`
+	UncompressedSampleOffset *uint32           `protobuf:"varint,9,opt,name=uncompressed_sample_offset" json:"uncompressed_sample_offset,omitempty"`
+	XXX_unrecognized         []byte            `json:"-"`
 }
 
 func (m *CSVCMsg_VoiceData) Reset()         { *m = CSVCMsg_VoiceData{} }
@@ -1804,6 +2072,99 @@ func (m *CSVCMsg_VoiceData) GetFormat() VoiceDataFormatT {
 		return *m.Format
 	}
 	return Default_CSVCMsg_VoiceData_Format
+}
+
+func (m *CSVCMsg_VoiceData) GetSequenceBytes() int32 {
+	if m != nil && m.SequenceBytes != nil {
+		return *m.SequenceBytes
+	}
+	return 0
+}
+
+func (m *CSVCMsg_VoiceData) GetSectionNumber() uint32 {
+	if m != nil && m.SectionNumber != nil {
+		return *m.SectionNumber
+	}
+	return 0
+}
+
+func (m *CSVCMsg_VoiceData) GetUncompressedSampleOffset() uint32 {
+	if m != nil && m.UncompressedSampleOffset != nil {
+		return *m.UncompressedSampleOffset
+	}
+	return 0
+}
+
+type CSVCMsg_PacketReliable struct {
+	Tick             *int32 `protobuf:"varint,1,opt,name=tick" json:"tick,omitempty"`
+	Messagessize     *int32 `protobuf:"varint,2,opt,name=messagessize" json:"messagessize,omitempty"`
+	State            *bool  `protobuf:"varint,3,opt,name=state" json:"state,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CSVCMsg_PacketReliable) Reset()         { *m = CSVCMsg_PacketReliable{} }
+func (m *CSVCMsg_PacketReliable) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_PacketReliable) ProtoMessage()    {}
+
+func (m *CSVCMsg_PacketReliable) GetTick() int32 {
+	if m != nil && m.Tick != nil {
+		return *m.Tick
+	}
+	return 0
+}
+
+func (m *CSVCMsg_PacketReliable) GetMessagessize() int32 {
+	if m != nil && m.Messagessize != nil {
+		return *m.Messagessize
+	}
+	return 0
+}
+
+func (m *CSVCMsg_PacketReliable) GetState() bool {
+	if m != nil && m.State != nil {
+		return *m.State
+	}
+	return false
+}
+
+type CSVCMsg_FullFrameSplit struct {
+	Tick             *int32 `protobuf:"varint,1,opt,name=tick" json:"tick,omitempty"`
+	Section          *int32 `protobuf:"varint,2,opt,name=section" json:"section,omitempty"`
+	Total            *int32 `protobuf:"varint,3,opt,name=total" json:"total,omitempty"`
+	Data             []byte `protobuf:"bytes,4,opt,name=data" json:"data,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CSVCMsg_FullFrameSplit) Reset()         { *m = CSVCMsg_FullFrameSplit{} }
+func (m *CSVCMsg_FullFrameSplit) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_FullFrameSplit) ProtoMessage()    {}
+
+func (m *CSVCMsg_FullFrameSplit) GetTick() int32 {
+	if m != nil && m.Tick != nil {
+		return *m.Tick
+	}
+	return 0
+}
+
+func (m *CSVCMsg_FullFrameSplit) GetSection() int32 {
+	if m != nil && m.Section != nil {
+		return *m.Section
+	}
+	return 0
+}
+
+func (m *CSVCMsg_FullFrameSplit) GetTotal() int32 {
+	if m != nil && m.Total != nil {
+		return *m.Total
+	}
+	return 0
+}
+
+func (m *CSVCMsg_FullFrameSplit) GetData() []byte {
+	if m != nil {
+		return m.Data
+	}
+	return nil
 }
 
 type CSVCMsg_CmdKeyValues struct {
@@ -1894,39 +2255,247 @@ func (m *CSVCMsg_PeerList) GetPeer() []*CMsgServerPeer {
 	return nil
 }
 
-type CSVCMsg_PacketReliable struct {
-	Tick             *int32 `protobuf:"varint,1,opt,name=tick" json:"tick,omitempty"`
-	State            *bool  `protobuf:"varint,2,opt,name=state" json:"state,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+type CSVCMsg_ClearAllStringTables struct {
+	Mapname          *string `protobuf:"bytes,1,opt,name=mapname" json:"mapname,omitempty"`
+	MapCrc           *uint32 `protobuf:"varint,2,opt,name=map_crc" json:"map_crc,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *CSVCMsg_PacketReliable) Reset()         { *m = CSVCMsg_PacketReliable{} }
-func (m *CSVCMsg_PacketReliable) String() string { return proto.CompactTextString(m) }
-func (*CSVCMsg_PacketReliable) ProtoMessage()    {}
+func (m *CSVCMsg_ClearAllStringTables) Reset()         { *m = CSVCMsg_ClearAllStringTables{} }
+func (m *CSVCMsg_ClearAllStringTables) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_ClearAllStringTables) ProtoMessage()    {}
 
-func (m *CSVCMsg_PacketReliable) GetTick() int32 {
-	if m != nil && m.Tick != nil {
-		return *m.Tick
+func (m *CSVCMsg_ClearAllStringTables) GetMapname() string {
+	if m != nil && m.Mapname != nil {
+		return *m.Mapname
+	}
+	return ""
+}
+
+func (m *CSVCMsg_ClearAllStringTables) GetMapCrc() uint32 {
+	if m != nil && m.MapCrc != nil {
+		return *m.MapCrc
 	}
 	return 0
 }
 
-func (m *CSVCMsg_PacketReliable) GetState() bool {
-	if m != nil && m.State != nil {
-		return *m.State
+type ProtoFlattenedSerializerFieldT struct {
+	VarTypeSym             *int32   `protobuf:"varint,1,opt,name=var_type_sym" json:"var_type_sym,omitempty"`
+	VarNameSym             *int32   `protobuf:"varint,2,opt,name=var_name_sym" json:"var_name_sym,omitempty"`
+	BitCount               *int32   `protobuf:"varint,3,opt,name=bit_count" json:"bit_count,omitempty"`
+	LowValue               *float32 `protobuf:"fixed32,4,opt,name=low_value" json:"low_value,omitempty"`
+	HighValue              *float32 `protobuf:"fixed32,5,opt,name=high_value" json:"high_value,omitempty"`
+	EncodeFlags            *int32   `protobuf:"varint,6,opt,name=encode_flags" json:"encode_flags,omitempty"`
+	FieldSerializerNameSym *int32   `protobuf:"varint,7,opt,name=field_serializer_name_sym" json:"field_serializer_name_sym,omitempty"`
+	FieldSerializerVersion *int32   `protobuf:"varint,8,opt,name=field_serializer_version" json:"field_serializer_version,omitempty"`
+	SendNodeSym            *int32   `protobuf:"varint,9,opt,name=send_node_sym" json:"send_node_sym,omitempty"`
+	XXX_unrecognized       []byte   `json:"-"`
+}
+
+func (m *ProtoFlattenedSerializerFieldT) Reset()         { *m = ProtoFlattenedSerializerFieldT{} }
+func (m *ProtoFlattenedSerializerFieldT) String() string { return proto.CompactTextString(m) }
+func (*ProtoFlattenedSerializerFieldT) ProtoMessage()    {}
+
+func (m *ProtoFlattenedSerializerFieldT) GetVarTypeSym() int32 {
+	if m != nil && m.VarTypeSym != nil {
+		return *m.VarTypeSym
+	}
+	return 0
+}
+
+func (m *ProtoFlattenedSerializerFieldT) GetVarNameSym() int32 {
+	if m != nil && m.VarNameSym != nil {
+		return *m.VarNameSym
+	}
+	return 0
+}
+
+func (m *ProtoFlattenedSerializerFieldT) GetBitCount() int32 {
+	if m != nil && m.BitCount != nil {
+		return *m.BitCount
+	}
+	return 0
+}
+
+func (m *ProtoFlattenedSerializerFieldT) GetLowValue() float32 {
+	if m != nil && m.LowValue != nil {
+		return *m.LowValue
+	}
+	return 0
+}
+
+func (m *ProtoFlattenedSerializerFieldT) GetHighValue() float32 {
+	if m != nil && m.HighValue != nil {
+		return *m.HighValue
+	}
+	return 0
+}
+
+func (m *ProtoFlattenedSerializerFieldT) GetEncodeFlags() int32 {
+	if m != nil && m.EncodeFlags != nil {
+		return *m.EncodeFlags
+	}
+	return 0
+}
+
+func (m *ProtoFlattenedSerializerFieldT) GetFieldSerializerNameSym() int32 {
+	if m != nil && m.FieldSerializerNameSym != nil {
+		return *m.FieldSerializerNameSym
+	}
+	return 0
+}
+
+func (m *ProtoFlattenedSerializerFieldT) GetFieldSerializerVersion() int32 {
+	if m != nil && m.FieldSerializerVersion != nil {
+		return *m.FieldSerializerVersion
+	}
+	return 0
+}
+
+func (m *ProtoFlattenedSerializerFieldT) GetSendNodeSym() int32 {
+	if m != nil && m.SendNodeSym != nil {
+		return *m.SendNodeSym
+	}
+	return 0
+}
+
+type ProtoFlattenedSerializerT struct {
+	SerializerNameSym *int32                            `protobuf:"varint,1,opt,name=serializer_name_sym" json:"serializer_name_sym,omitempty"`
+	SerializerVersion *int32                            `protobuf:"varint,2,opt,name=serializer_version" json:"serializer_version,omitempty"`
+	Fields            []*ProtoFlattenedSerializerFieldT `protobuf:"bytes,3,rep,name=fields" json:"fields,omitempty"`
+	XXX_unrecognized  []byte                            `json:"-"`
+}
+
+func (m *ProtoFlattenedSerializerT) Reset()         { *m = ProtoFlattenedSerializerT{} }
+func (m *ProtoFlattenedSerializerT) String() string { return proto.CompactTextString(m) }
+func (*ProtoFlattenedSerializerT) ProtoMessage()    {}
+
+func (m *ProtoFlattenedSerializerT) GetSerializerNameSym() int32 {
+	if m != nil && m.SerializerNameSym != nil {
+		return *m.SerializerNameSym
+	}
+	return 0
+}
+
+func (m *ProtoFlattenedSerializerT) GetSerializerVersion() int32 {
+	if m != nil && m.SerializerVersion != nil {
+		return *m.SerializerVersion
+	}
+	return 0
+}
+
+func (m *ProtoFlattenedSerializerT) GetFields() []*ProtoFlattenedSerializerFieldT {
+	if m != nil {
+		return m.Fields
+	}
+	return nil
+}
+
+type CSVCMsg_FlattenedSerializer struct {
+	Serializers      []*ProtoFlattenedSerializerT `protobuf:"bytes,1,rep,name=serializers" json:"serializers,omitempty"`
+	Symbols          []string                     `protobuf:"bytes,2,rep,name=symbols" json:"symbols,omitempty"`
+	XXX_unrecognized []byte                       `json:"-"`
+}
+
+func (m *CSVCMsg_FlattenedSerializer) Reset()         { *m = CSVCMsg_FlattenedSerializer{} }
+func (m *CSVCMsg_FlattenedSerializer) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_FlattenedSerializer) ProtoMessage()    {}
+
+func (m *CSVCMsg_FlattenedSerializer) GetSerializers() []*ProtoFlattenedSerializerT {
+	if m != nil {
+		return m.Serializers
+	}
+	return nil
+}
+
+func (m *CSVCMsg_FlattenedSerializer) GetSymbols() []string {
+	if m != nil {
+		return m.Symbols
+	}
+	return nil
+}
+
+type CSVCMsg_StopSound struct {
+	Guid             *uint32 `protobuf:"fixed32,1,opt,name=guid" json:"guid,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *CSVCMsg_StopSound) Reset()         { *m = CSVCMsg_StopSound{} }
+func (m *CSVCMsg_StopSound) String() string { return proto.CompactTextString(m) }
+func (*CSVCMsg_StopSound) ProtoMessage()    {}
+
+func (m *CSVCMsg_StopSound) GetGuid() uint32 {
+	if m != nil && m.Guid != nil {
+		return *m.Guid
+	}
+	return 0
+}
+
+type CBidirMsg_RebroadcastGameEvent struct {
+	Posttoserver     *bool   `protobuf:"varint,1,opt,name=posttoserver" json:"posttoserver,omitempty"`
+	Buftype          *int32  `protobuf:"varint,2,opt,name=buftype" json:"buftype,omitempty"`
+	Clientbitcount   *uint32 `protobuf:"varint,3,opt,name=clientbitcount" json:"clientbitcount,omitempty"`
+	Receivingclients *uint64 `protobuf:"varint,4,opt,name=receivingclients" json:"receivingclients,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *CBidirMsg_RebroadcastGameEvent) Reset()         { *m = CBidirMsg_RebroadcastGameEvent{} }
+func (m *CBidirMsg_RebroadcastGameEvent) String() string { return proto.CompactTextString(m) }
+func (*CBidirMsg_RebroadcastGameEvent) ProtoMessage()    {}
+
+func (m *CBidirMsg_RebroadcastGameEvent) GetPosttoserver() bool {
+	if m != nil && m.Posttoserver != nil {
+		return *m.Posttoserver
 	}
 	return false
 }
 
+func (m *CBidirMsg_RebroadcastGameEvent) GetBuftype() int32 {
+	if m != nil && m.Buftype != nil {
+		return *m.Buftype
+	}
+	return 0
+}
+
+func (m *CBidirMsg_RebroadcastGameEvent) GetClientbitcount() uint32 {
+	if m != nil && m.Clientbitcount != nil {
+		return *m.Clientbitcount
+	}
+	return 0
+}
+
+func (m *CBidirMsg_RebroadcastGameEvent) GetReceivingclients() uint64 {
+	if m != nil && m.Receivingclients != nil {
+		return *m.Receivingclients
+	}
+	return 0
+}
+
+type CBidirMsg_RebroadcastSource struct {
+	Eventsource      *int32 `protobuf:"varint,1,opt,name=eventsource" json:"eventsource,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CBidirMsg_RebroadcastSource) Reset()         { *m = CBidirMsg_RebroadcastSource{} }
+func (m *CBidirMsg_RebroadcastSource) String() string { return proto.CompactTextString(m) }
+func (*CBidirMsg_RebroadcastSource) ProtoMessage()    {}
+
+func (m *CBidirMsg_RebroadcastSource) GetEventsource() int32 {
+	if m != nil && m.Eventsource != nil {
+		return *m.Eventsource
+	}
+	return 0
+}
+
 func init() {
-	proto.RegisterEnum("dota.Bidirectional_Messages", Bidirectional_Messages_name, Bidirectional_Messages_value)
 	proto.RegisterEnum("dota.CLC_Messages", CLC_Messages_name, CLC_Messages_value)
 	proto.RegisterEnum("dota.SVC_Messages", SVC_Messages_name, SVC_Messages_value)
-	proto.RegisterEnum("dota.SVC_Messages_LowFrequency", SVC_Messages_LowFrequency_name, SVC_Messages_LowFrequency_value)
 	proto.RegisterEnum("dota.VoiceDataFormatT", VoiceDataFormatT_name, VoiceDataFormatT_value)
-	proto.RegisterEnum("dota.EQueryCvarValueStatus", EQueryCvarValueStatus_name, EQueryCvarValueStatus_value)
 	proto.RegisterEnum("dota.RequestPauseT", RequestPauseT_name, RequestPauseT_value)
 	proto.RegisterEnum("dota.PrefetchType", PrefetchType_name, PrefetchType_value)
 	proto.RegisterEnum("dota.ESplitScreenMessageType", ESplitScreenMessageType_name, ESplitScreenMessageType_value)
+	proto.RegisterEnum("dota.EQueryCvarValueStatus", EQueryCvarValueStatus_name, EQueryCvarValueStatus_value)
 	proto.RegisterEnum("dota.DIALOG_TYPE", DIALOG_TYPE_name, DIALOG_TYPE_value)
+	proto.RegisterEnum("dota.SVC_Messages_LowFrequency", SVC_Messages_LowFrequency_name, SVC_Messages_LowFrequency_value)
+	proto.RegisterEnum("dota.Bidirectional_Messages", Bidirectional_Messages_name, Bidirectional_Messages_value)
 }
