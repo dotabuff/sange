@@ -1,4 +1,8 @@
-# Sange
+# See [Manta](https://github.com/dotabuff/manta)
+
+Sange is no longer being developed. All development for Source 2 replay parsing has moved to [Manta](https://github.com/dotabuff/manta). 
+
+# ~~Sange~~
 
 Dota 2 (Source 2) replay parser written in Go.
 
